@@ -1,0 +1,29 @@
+{
+	"rk": {
+		"data":{
+			"RKI COVID19": {
+				"web":"https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0/data?orderBy=ObjectId&orderByAsc=false",
+				"api":"https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer",
+				"properties": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer?f=json"
+			},
+			"RKI Corona Bundesländer": {
+				"web":"https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/ef4b445a53c1406892257fe63129a8ea_0/data?geometry=-39.311%2C46.270%2C55.567%2C55.886",
+				"api":"https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%C3%A4lle_in_den_Bundesl%C3%A4ndern/FeatureServer",
+				"properties": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%C3%A4lle_in_den_Bundesl%C3%A4ndern/FeatureServer?f=json"
+			},
+			"RKI Corona Landkreise": {
+				"web":"https://npgeo-corona-npgeo-de.hub.arcgis.com/datasets/917fc37a709542548cc3be077a786c17_0/data?geometry=-83.869%2C40.632%2C105.887%2C59.923",
+				"api":"https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_Landkreisdaten/FeatureServer",
+				"properties": "https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/Coronaf%C3%A4lle_in_den_Bundesl%C3%A4ndern/FeatureServer?f=json"
+			}
+		},
+		"api_documentation":{
+			"general":"https://developers.arcgis.com/rest/services-reference/feature-service.htm",
+			"query":"https://developers.arcgis.com/rest/services-reference/query-related-records-feature-service-.htm",
+			"example_query":"https://services7.arcgis.com/mOBPykOjAyBO2ZKk/arcgis/rest/services/RKI_COVID19/FeatureServer/0/query?outFields=*&where=ObjectId%3E1291070&f=json"
+
+		}
+	}
+}
+
+

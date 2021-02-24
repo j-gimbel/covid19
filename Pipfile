@@ -13,9 +13,14 @@ pydantic = "*"
 typing = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
+jupyterlab = "*"
 
 [dev-packages]
 black = "*"
+flake8 = "*"
 
 [requires]
 python_version = "3.9"
+
+[pipenv]
+allow_prereleases = true

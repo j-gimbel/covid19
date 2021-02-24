@@ -14,8 +14,17 @@ from .database import Base
 
 class Bundesland(Base):
     __tablename__ = "bundeslaender"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True)
+    OBJECTID_1 = Column(Integer, primary_key=True, index=True)
+    LAN_ew_GEN = Column(String, unique=True, index=True)
+    LAN_ew_BEZ = Column(String)
+    LAN_ew_EWZ = Column(String)
+    Fallzahl = Column(String)
+    Aktualisierung = Column(String)
+    faelle_100000_EW = Column(Float)
+    Death = Column(Integer)
+    cases7_bl_per_100k = Column(Float)
+    cases7_bl = Column(Float)
+    death7_bl = Column(Float)
 
     # down
     landkreise = relationship("Landkreis", back_populates="bundesland")
@@ -30,7 +39,7 @@ class Landkreis(Base):
     bevoelkerung = Column(Integer)
 
     # up
-    bundesland_id = Column(Integer, ForeignKey("bundeslaender.id"))
+    bundesland_id = Column(Integer, ForeignKey("bundeslaender.OBJECTID_1"))
     bundesland = relationship("Bundesland", back_populates="landkreise")
 
     # down
