@@ -3,7 +3,9 @@
 ## Im Terminal Umgebungsvariable setzen
 
 cmd, windows -> `init.bat`
+
 powershell, windows -> `init.ps1`
+
 linux -> `init.sh`
 
 ## täglicher Download der RKI csv daten
