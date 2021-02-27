@@ -31,12 +31,12 @@ class Bundesland(Base):
 class Bundesland_Daten_Taeglich(Base):
     __tablename__ = "bundeslaender_daten_taeglich"
     ID = Column(Integer, primary_key=True, index=True)
-    Fallzahl = Column(String)
+    Fallzahl = Column(Integer)
     Aktualisierung = Column(Integer)
     faelle_100000_EW = Column(Float)
     Death = Column(Integer)
     cases7_bl_per_100k = Column(Float)
-    cases7_bl = Column(Float)
+    cases7_bl = Column(Integer)
     death7_bl = Column(Float)
 
     # up

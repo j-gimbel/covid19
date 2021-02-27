@@ -20,8 +20,8 @@ def get_db():
 
 
 @app.get(
-    "/api/bundeslaender/latest"  # ,
-    # response_model=schemas.Bundesland_Daten_Taeglich_Mit_Bundesland,
+    "/api/bundeslaender/latest",  # ,
+    response_model=List[schemas.Bundesland_Daten_Taeglich_Mit_Bundesland],
 )
 def bundeslaender_letzte_daten(session: Session = Depends(get_db)):
 

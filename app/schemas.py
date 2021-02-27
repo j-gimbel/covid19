@@ -28,7 +28,7 @@ class Bundesland_Daten_Taeglich_Mit_Bundesland(BaseModel):
     faelle_100000_EW: float
     Death: int
     cases7_bl_per_100k: float
-    cases7_bl: float
+    cases7_bl: int
     death7_bl: int
     bundesland: Bundesland_Base
 
