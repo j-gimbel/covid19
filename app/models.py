@@ -17,7 +17,7 @@ class Bundesland(Base):
     ID = Column(Integer, primary_key=True, index=True)
     LAN_ew_GEN = Column(String, unique=True, index=True)
     LAN_ew_BEZ = Column(String)
-    LAN_ew_EWZ = Column(String)
+    LAN_ew_EWZ = Column(Integer)
 
     # down
     landkreise = relationship("Landkreis", back_populates="bundesland")
@@ -41,7 +41,9 @@ class Bundesland_Daten_Taeglich(Base):
 
     # up
     bundesland_id = Column(Integer, ForeignKey("bundeslaender.ID"))
-    bundesland = relationship("Bundesland", back_populates="taegliche_daten")
+    bundesland = relationship(
+        "Bundesland", back_populates="taegliche_daten", lazy="joined"
+    )
 
 
 class Landkreis(Base):
