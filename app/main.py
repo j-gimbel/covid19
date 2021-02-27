@@ -7,7 +7,10 @@ from .database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(
+    title="Covid 19 API Demo",
+    description="Datenquelle: RKI COVID-19 Datenhub, https://npgeo-corona-npgeo-de.hub.arcgis.com/search?collection=Dataset/",
+)
 
 
 # Dependency
