@@ -25,7 +25,7 @@ class Bundesland(Base):
         "Bundesland_Daten_Taeglich", back_populates="bundesland"
     )
 
-    faelle = relationship("Fall", back_populates="bundesland")
+    faelle = relationship("Fall_Daten_Taeglich", back_populates="bundesland")
 
 
 class Bundesland_Daten_Taeglich(Base):
@@ -53,6 +53,22 @@ class Landkreis(Base):
     GEN = Column(String, index=True)
     BEZ = Column(String)
     EWZ = Column(Integer)
+
+    # up
+    BL_ID = Column(Integer, ForeignKey("bundeslaender.ID"))
+    bundesland = relationship("Bundesland", back_populates="landkreise")
+
+    # down
+
+    faelle = relationship("Fall_Daten_Taeglich", back_populates="landkreis")
+    taegliche_daten = relationship(
+        "Landkreis_Daten_Taeglich", back_populates="landkreis"
+    )
+
+
+class Landkreis_Daten_Taeglich(Base):
+    __tablename__ = "landkreise_daten_taeglich"
+    ID = Column(Integer, primary_key=True, index=True)
     death_rate = Column(Float)
     cases = Column(Integer)
     deaths = Column(Integer)
@@ -65,11 +81,8 @@ class Landkreis(Base):
     death7_lk = Column(Integer)
 
     # up
-    BL_ID = Column(Integer, ForeignKey("bundeslaender.ID"))
-    bundesland = relationship("Bundesland", back_populates="landkreise")
-
-    # down
-    faelle = relationship("Fall", back_populates="landkreis")
+    landkreis_id = Column(Integer, ForeignKey("landkreise.ID"))
+    landkreis = relationship("Landkreis", back_populates="taegliche_daten")
 
 
 class Altersgruppe(Base):
@@ -79,11 +92,11 @@ class Altersgruppe(Base):
 
     # down
 
-    faelle = relationship("Fall", back_populates="altersgruppe")
+    faelle = relationship("Fall_Daten_Taeglich", back_populates="altersgruppe")
 
 
-class Fall(Base):
-    __tablename__ = "faelle"
+class Fall_Daten_Taeglich(Base):
+    __tablename__ = "faelle_daten_taeglich"
     # __table_args__ = (UniqueConstraint("name", "typ", name="_lk_name_typ_uc"),)
     id = Column(Integer, primary_key=True, index=True)
     geschlecht = Column(String)
