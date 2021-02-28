@@ -72,7 +72,7 @@ class DB:
 
         bundesland_data = (
             self.session.query(models.Bundesland_Daten_Taeglich)
-            .order_by(models.Bundesland_Daten_Taeglich.Aktualisierung)
+            .order_by(models.Bundesland_Daten_Taeglich.Aktualisierung.desc())
             .first()
         )
 
@@ -186,7 +186,7 @@ class DB:
 
         landkreise_data = (
             self.session.query(models.Landkreis_Daten_Taeglich)
-            .order_by(models.Landkreis_Daten_Taeglich.last_update)
+            .order_by(models.Landkreis_Daten_Taeglich.last_update.desc())
             .first()
         )
 
@@ -446,7 +446,7 @@ class DB:
 
         fall = (
             self.session.query(models.Fall_Daten_Taeglich)
-            .order_by(models.Fall_Daten_Taeglich.datenStand)
+            .order_by(models.Fall_Daten_Taeglich.datenStand.desc())
             .first()
         )
 
