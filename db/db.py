@@ -5,6 +5,8 @@ import logging
 import requests
 import os
 import csv
+import shutil
+import gzip
 from datetime import date, datetime, timedelta
 
 from app import models  # ,crud,  schemas
@@ -16,14 +18,22 @@ def read_data_from_csv(filepath: str, expected_header_line: str):
     if not os.path.isfile(filepath):
         raise Exception("File " + filepath + " not found")
     rows = []
-    with open(filepath, "r", encoding="utf-8-sig") as csvfile:
-        csv_reader = csv.reader(csvfile)
-        for row in csv_reader:
-            rows.append(row)
 
+    # with open(filepath, "r", encoding="utf-8-sig") as csvfile:
+    csv_list = []
+    with gzip.open(filepath, "rb") as f:
+
+        tmp_file = open("temp.tmp", "wb")
+        tmp_file.write(f.read())
+        tmp_file.close()
+
+        with open("temp.tmp", "r", encoding="utf-8-sig") as csvfile:
+
+            csv_reader = csv.reader(csvfile)
+            for row in csv_reader:
+                rows.append(row)
     if rows[0] != expected_header_line.split(","):
         raise Exception("Bad Header " + filepath)
-
     return rows
 
 
@@ -81,7 +91,7 @@ class DB:
         next_day = last_aktualisierung_date + timedelta(days=1)
         while True:
             date = next_day.date().isoformat()
-            file = self.data_dir + "/" + date + "_RKI_Corona_Bundeslaender.csv"
+            file = self.data_dir + "/" + date + "_RKI_Corona_Bundeslaender.csv.gz"
             if os.path.isfile(file):
                 self.insert_bundeslaender_data_from_csv(date)
             else:
@@ -91,9 +101,10 @@ class DB:
 
     def insert_bundeslaender_data_from_csv(self, date):
 
-        filepath = self.data_dir + "/" + date + "_RKI_Corona_Bundeslaender.csv"
+        filepath = self.data_dir + "/" + date + "_RKI_Corona_Bundeslaender.csv.gz"
         if not os.path.isfile(filepath):
-            raise FileNotFoundError("Cound not find file " + filepath)
+            self.logger.warning("Cound not find file " + filepath)
+            return
         self.logger.info("reading " + filepath)
         rows = []
 
@@ -195,7 +206,7 @@ class DB:
         next_day = last_update_date + timedelta(days=1)
         while True:
             date = next_day.date().isoformat()
-            file = self.data_dir + "/" + date + "_RKI_Corona_Landkreise.csv"
+            file = self.data_dir + "/" + date + "_RKI_Corona_Landkreise.csv.gz"
             if os.path.isfile(file):
                 self.insert_landkreise_data_from_csv(date)
             else:
@@ -205,9 +216,10 @@ class DB:
 
     def insert_landkreise_data_from_csv(self, date):
 
-        filepath = self.data_dir + "/" + date + "_RKI_Corona_Landkreise.csv"
+        filepath = self.data_dir + "/" + date + "_RKI_Corona_Landkreise.csv.gz"
         if not os.path.isfile(filepath):
-            raise FileNotFoundError("Cound not find file " + filepath)
+            self.logger.warning("Cound not find file " + filepath)
+            return
         self.logger.info("reading " + filepath)
         rows = []
 
@@ -298,14 +310,16 @@ class DB:
 
         self.session.commit()
 
-    def create_faelle_data_from_csv(self):
+    def insert_faelle_data_from_csv(self, date):
 
         """
         Achtung: diese funktion nur auf leere Tabellen für Altersgruppen, Faelle anwenden !
         """
 
-        filepath = self.data_dir + "/RKI_COVID19.csv"
-        self.logger.info("reading " + filepath)
+        filepath = self.data_dir + "/" + date + "_RKI_COVID19.csv.gz"
+        if not os.path.isfile(filepath):
+            self.logger.warning("Cound not find file " + filepath)
+            return
         rows = []
 
         rows = read_data_from_csv(
@@ -442,14 +456,6 @@ class DB:
                 counter = 0
         self.session.commit()
 
-    def faelle_data_update_from_api(self):
-
-        fall = (
-            self.session.query(models.Fall_Daten_Taeglich)
-            .order_by(models.Fall_Daten_Taeglich.datenStand.desc())
-            .first()
-        )
-
     def _clear_db(self):
         print("clearing")
         self.session.close()
@@ -479,7 +485,7 @@ class DB:
 
         self.insert_bundeslaender_data_from_csv(date=start_date)
         self.insert_landkreise_data_from_csv(date=start_date)
-        self.create_faelle_data_from_csv()
+        self.insert_faelle_data_from_csv(date=start_date)
 
         self.update()
 
@@ -489,4 +495,4 @@ class DB:
 
         self.bundeslaender_data_update_from_csv()
         self.landkreise_data_update_from_csv()
-        self.faelle_data_update_from_api()
+        # self.faelle_data_update_from_api()

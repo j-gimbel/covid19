@@ -2,6 +2,7 @@ from datetime import date
 import logging
 import requests
 import os.path as path
+import gzip
 
 
 def store_file_if_not_downloaded_already(when: str, extension: str, file: dict) -> str:
@@ -16,21 +17,24 @@ def store_file_if_not_downloaded_already(when: str, extension: str, file: dict) 
         raise Exception('bad value for parameter "when"(' + str(when) + ")")
     if when == "once":
         date_today = ""
-    filepath = "downloads/" + date_today + f["name"] + "." + extension
+    filepath = "downloads/" + date_today + file["name"] + "." + extension
     if not path.isfile(filepath):
         logger.info("downloading file " + filepath)
-        r = requests.get(f["url"])
+        r = requests.get(file["url"])
         if r.status_code != 200:
             raise exception(
                 "Could not download from url "
-                + f["url"]
+                + file["url"]
                 + " (for file "
                 + filepath
                 + ")"
             )
-        csv_file = open(filepath, "wb")
-        csv_file.write(r.content)
-        csv_file.close()
+        # csv_file = open(filepath, "wb")
+        # csv_file.write(r.content)
+        # csv_file.close()
+        with gzip.open(filepath + ".gz", "wb") as f:
+            f.write(r.content)
+
     return filepath
 
 
@@ -59,14 +63,13 @@ if __name__ == "__main__":
     # add ch to logger
     logger.addHandler(fh)
 
-    files_once = [
+    files_once = []
+
+    files_daily = [
         {
             "url": "https://opendata.arcgis.com/datasets/dd4580c810204019a7b8eb3e0b329dd6_0.csv",
             "name": "RKI_COVID19",
-        }
-    ]
-
-    files_daily = [
+        },
         {
             "url": "https://opendata.arcgis.com/datasets/ef4b445a53c1406892257fe63129a8ea_0.csv",
             "name": "RKI_Corona_Bundeslaender",
