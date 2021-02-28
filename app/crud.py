@@ -17,7 +17,7 @@ def get_data_for_bundeslaender(session: Session, date: str):
 
     bundesland_data = (
         session.query(models.Bundesland_Daten_Taeglich)
-        .order_by(models.Bundesland_Daten_Taeglich.Aktualisierung)
+        .order_by(models.Bundesland_Daten_Taeglich.Aktualisierung.desc())
         .first()
     )
 
