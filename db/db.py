@@ -3,9 +3,9 @@ import json
 from sqlalchemy.orm import Session
 import logging
 import requests
-import os.path as path
+import os
 import csv
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from app import models  # ,crud,  schemas
 from app.database import SessionLocal, engine
@@ -13,7 +13,7 @@ from app.database import SessionLocal, engine
 
 def read_data_from_csv(filepath: str, expected_header_line: str):
 
-    if not path.isfile(filepath):
+    if not os.path.isfile(filepath):
         raise Exception("File " + filepath + " not found")
     rows = []
     with open(filepath, "r", encoding="utf-8-sig") as csvfile:
@@ -37,6 +37,10 @@ class DB:
         self.session = SessionLocal()
         self.date_today = date.today().isoformat()
 
+        self.sources = json.load(
+            open(os.path.dirname(__file__) + "/../rki/sources.json", "r")
+        )
+
         self.data_dir = "downloads"
 
         # create logger
@@ -57,16 +61,39 @@ class DB:
         fh = logging.FileHandler("create_db.log")
         fh.setLevel(logging.DEBUG)
         # add formatter to ch
-        ch.setFormatter(formatter)
+        fh.setFormatter(formatter)
         # add ch to logger
         self.logger.addHandler(fh)
         self.logger.info("clearing DB")
 
-    def update_bundeslaender_data_from_csv(self):
+    def bundeslaender_data_update_from_csv(self):
 
-        filepath = (
-            self.data_dir + "/" + self.date_today + "_RKI_Corona_Bundeslaender.csv"
+        # bundeslaender = self.session.query(models.Bundesland).all()
+
+        bundesland_data = (
+            self.session.query(models.Bundesland_Daten_Taeglich)
+            .order_by(models.Bundesland_Daten_Taeglich.Aktualisierung)
+            .first()
         )
+
+        last_aktualisierung_timestamp = int(bundesland_data.Aktualisierung)
+        last_aktualisierung_date = datetime.fromtimestamp(last_aktualisierung_timestamp)
+        next_day = last_aktualisierung_date + timedelta(days=1)
+        while True:
+            date = next_day.date().isoformat()
+            file = self.data_dir + "/" + date + "_RKI_Corona_Bundeslaender.csv"
+            if os.path.isfile(file):
+                self.insert_bundeslaender_data_from_csv(date)
+            else:
+                self.logger.info("file does not exist " + file + ". stopping update")
+                break
+            next_day += timedelta(days=1)
+
+    def insert_bundeslaender_data_from_csv(self, date):
+
+        filepath = self.data_dir + "/" + date + "_RKI_Corona_Bundeslaender.csv"
+        if not os.path.isfile(filepath):
+            raise FileNotFoundError("Cound not find file " + filepath)
         self.logger.info("reading " + filepath)
         rows = []
 
@@ -144,12 +171,43 @@ class DB:
                         + "with data "
                         + json.dumps(e)
                     )
+            else:
+                self.logger.warning(
+                    "Data for "
+                    + bundesland.LAN_ew_GEN
+                    + " for date "
+                    + date
+                    + " already in db"
+                )
 
         self.session.commit()
 
-    def update_landkreise_data_from_csv(self):
+    def landkreise_data_update_from_csv(self):
 
-        filepath = self.data_dir + "/" + self.date_today + "_RKI_Corona_Landkreise.csv"
+        landkreise_data = (
+            self.session.query(models.Landkreis_Daten_Taeglich)
+            .order_by(models.Landkreis_Daten_Taeglich.last_update)
+            .first()
+        )
+
+        last_update_timestamp = int(landkreise_data.last_update)
+        last_update_date = datetime.fromtimestamp(last_update_timestamp)
+        next_day = last_update_date + timedelta(days=1)
+        while True:
+            date = next_day.date().isoformat()
+            file = self.data_dir + "/" + date + "_RKI_Corona_Landkreise.csv"
+            if os.path.isfile(file):
+                self.insert_landkreise_data_from_csv(date)
+            else:
+                self.logger.info("file does not exist " + file + ". stopping update")
+                break
+            next_day += timedelta(days=1)
+
+    def insert_landkreise_data_from_csv(self, date):
+
+        filepath = self.data_dir + "/" + date + "_RKI_Corona_Landkreise.csv"
+        if not os.path.isfile(filepath):
+            raise FileNotFoundError("Cound not find file " + filepath)
         self.logger.info("reading " + filepath)
         rows = []
 
@@ -181,9 +239,8 @@ class DB:
                     BL_ID=row[header.index("BL_ID")],
                 )
                 self.session.add(landkreis)
-            else:
-
-                print("TODO: update it if necessary !")
+            # else:
+            #    print("TODO: update it if necessary !")
             # check if current data is already in db by checking the timestamp
 
             last_update_datetime = datetime.strptime(
@@ -234,6 +291,10 @@ class DB:
                         + "with data "
                         + json.dumps(e)
                     )
+            else:
+                self.logger.warning(
+                    "Data for " + landkreis.GEN + " for date " + date + " already in db"
+                )
 
         self.session.commit()
 
@@ -381,18 +442,32 @@ class DB:
                 counter = 0
         self.session.commit()
 
+    def faelle_data_update_from_api(self):
+
+        fall = (
+            self.session.query(models.Fall_Daten_Taeglich)
+            .order_by(models.Fall_Daten_Taeglich.datenStand)
+            .first()
+        )
+
     def _clear_db(self):
+        print("clearing")
         self.session.close()
-        models.Base.metadata.drop_all(bind=engine)
+        print(os.path.dirname(__file__) + "/../database.db")
+        os.remove(os.path.dirname(__file__) + "/../database.db")
+        # print(models.Base.metadata.tables.values())
+        # models.Base.metadata.drop_all(bind=engine)
         models.Base.metadata.create_all(bind=engine)
         self.session = SessionLocal()
 
-    def create(self):
+    def create(self, start_date):
+
         from sqlalchemy.engine import Engine
         from sqlalchemy import event
 
         @event.listens_for(Engine, "connect")
         def set_sqlite_pragma(dbapi_connection, connection_record):
+            # print("event")
             cursor = dbapi_connection.cursor()
             cursor.execute("PRAGMA journal_mode=OFF")
             cursor.execute("PRAGMA cache_size = 100000")
@@ -402,10 +477,16 @@ class DB:
 
         self._clear_db()
 
-        self.update_bundeslaender_data_from_csv()
-        self.update_landkreise_data_from_csv()
+        self.insert_bundeslaender_data_from_csv(date=start_date)
+        self.insert_landkreise_data_from_csv(date=start_date)
         self.create_faelle_data_from_csv()
 
+        self.update()
+
+    # get last date of data from table
+
     def update(self):
-        self.update_bundeslaender_data_from_rki_api()
-        self.update_landkreise_data_from_rki_api()
+
+        self.bundeslaender_data_update_from_csv()
+        self.landkreise_data_update_from_csv()
+        self.faelle_data_update_from_api()

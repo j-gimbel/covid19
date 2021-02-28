@@ -27,5 +27,4 @@ def get_db():
     response_model=List[schemas.Bundesland_Daten_Taeglich_Mit_Bundesland],
 )
 def bundeslaender_letzte_daten(session: Session = Depends(get_db)):
-
     return crud.get_data_for_bundeslaender(session=session, date="latest")
