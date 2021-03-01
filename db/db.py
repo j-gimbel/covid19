@@ -504,14 +504,15 @@ class DB:
                             + str(i + 1)
                         )
 
-                fall_daten_taeglich
+                        setattr(fall_daten_taeglich, key, value)
 
-            if counter > 10000:
+            if counter > 50000:
 
                 percent = round((i + 1) / len(rows) * 100, 1)
-                self.logger.info("adding Faelle, " + str(percent) + "% done")
+                self.logger.info("adding/updating Faelle, " + str(percent) + "% done")
                 self.session.commit()
                 counter = 0
+        self.session.commit()
         Inserted_csv_File = models.Inserted_csv_File(
             data_type="Fall",
             date=date,
@@ -542,7 +543,8 @@ class DB:
             # print("event")
             cursor = dbapi_connection.cursor()
             cursor.execute("PRAGMA journal_mode=OFF")
-            cursor.execute("PRAGMA cache_size = 100000")
+            # cursor.execute("PRAGMA cache_size = 100000")
+            cursor.execute("PRAGMA cache_size = -20000")
             cursor.execute("PRAGMA SYNCHRONOUS = OFF")
             cursor.execute("PRAGMA LOCKING_MODE = EXCLUSIVE")
             cursor.close()
