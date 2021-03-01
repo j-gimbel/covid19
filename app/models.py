@@ -100,7 +100,7 @@ class Altersgruppe(Base):
 class Fall_Daten_Taeglich(Base):
     __tablename__ = "faelle_daten_taeglich"
     # __table_args__ = (UniqueConstraint("name", "typ", name="_lk_name_typ_uc"),)
-    id = Column(Integer, primary_key=True, index=True)
+    ID = Column(Integer, primary_key=True, index=True)
     geschlecht = Column(String)
     anzahlFall = Column(Integer)
     anzahlTodesFall = Column(Integer)
@@ -149,3 +149,15 @@ class Fall_Daten_Taeglich(Base):
 
     bundesland_id = Column(Integer, ForeignKey("bundeslaender.ID"))
     bundesland = relationship("Bundesland", back_populates="faelle")
+
+
+class Inserted_csv_File(Base):
+
+    __tablename__ = "inserted_csv_files"
+    # __table_args__ = (UniqueConstraint("name", "typ", name="_lk_name_typ_uc"),)
+    ID = Column(Integer, primary_key=True, index=True)
+    data_type = Column(String)
+    date = Column(String)
+    md5sum = Column(String)
+    file_path = Column(String)
+    date_file_processed = Column(String)

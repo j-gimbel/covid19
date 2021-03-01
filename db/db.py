@@ -13,6 +13,17 @@ from app import models  # ,crud,  schemas
 from app.database import SessionLocal, engine
 
 
+import hashlib
+
+
+def md5(fname):
+    hash_md5 = hashlib.md5()
+    with open(fname, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
+
+
 def read_data_from_csv(filepath: str, expected_header_line: str):
 
     if not os.path.isfile(filepath):
@@ -76,6 +87,8 @@ class DB:
         self.logger.addHandler(fh)
         self.logger.info("clearing DB")
 
+    """
+
     def bundeslaender_data_update_from_csv(self):
 
         # bundeslaender = self.session.query(models.Bundesland).all()
@@ -98,10 +111,12 @@ class DB:
                 self.logger.info("file does not exist " + file + ". stopping update")
                 break
             next_day += timedelta(days=1)
+    """
 
-    def insert_bundeslaender_data_from_csv(self, date):
+    def insert_bundeslaender_data_from_csv(self, date: str, filepath: str):
 
-        filepath = self.data_dir + "/" + date + "_RKI_Corona_Bundeslaender.csv.gz"
+        # filepath = self.data_dir + "/" + date + "_RKI_Corona_Bundeslaender.csv.gz"
+
         if not os.path.isfile(filepath):
             self.logger.warning("Cound not find file " + filepath)
             return
@@ -190,10 +205,18 @@ class DB:
                     + date
                     + " already in db"
                 )
-
+        Inserted_csv_File = models.Inserted_csv_File(
+            data_type="Bundesland",
+            date=date,
+            md5sum=md5(filepath),
+            file_path=filepath,
+            date_file_processed=datetime.now().isoformat(),
+        )
+        self.session.add(Inserted_csv_File)
         self.session.commit()
 
-    def landkreise_data_update_from_csv(self):
+    """
+    def landkreise_data_update_from_csv(filepath:str):
 
         landkreise_data = (
             self.session.query(models.Landkreis_Daten_Taeglich)
@@ -213,10 +236,11 @@ class DB:
                 self.logger.info("file does not exist " + file + ". stopping update")
                 break
             next_day += timedelta(days=1)
+    """
 
-    def insert_landkreise_data_from_csv(self, date):
+    def insert_landkreise_data_from_csv(self, date: str, filepath: str):
 
-        filepath = self.data_dir + "/" + date + "_RKI_Corona_Landkreise.csv.gz"
+        # filepath = self.data_dir + "/" + date + "_RKI_Corona_Landkreise.csv.gz"
         if not os.path.isfile(filepath):
             self.logger.warning("Cound not find file " + filepath)
             return
@@ -308,15 +332,23 @@ class DB:
                     "Data for " + landkreis.GEN + " for date " + date + " already in db"
                 )
 
+        Inserted_csv_File = models.Inserted_csv_File(
+            data_type="Landkreis",
+            date=date,
+            md5sum=md5(filepath),
+            file_path=filepath,
+            date_file_processed=datetime.now().isoformat(),
+        )
+        self.session.add(Inserted_csv_File)
         self.session.commit()
 
-    def insert_faelle_data_from_csv(self, date):
+    def insert_or_update_faelle_data_from_csv(self, date: str, filepath: str):
 
         """
         Achtung: diese funktion nur auf leere Tabellen für Altersgruppen, Faelle anwenden !
         """
 
-        filepath = self.data_dir + "/" + date + "_RKI_COVID19.csv.gz"
+        # filepath = self.data_dir + "/" + date + "_RKI_COVID19.csv.gz"
         if not os.path.isfile(filepath):
             self.logger.warning("Cound not find file " + filepath)
             return
@@ -358,6 +390,7 @@ class DB:
         for bl in bundeslaender:
             bundeslaender_per_ID[bl.ID] = bl
 
+        objectId_index = header.index("ObjectId")
         IdBundesland = header.index("IdBundesland")
 
         altersgruppe_index = header.index("Altersgruppe")
@@ -381,6 +414,8 @@ class DB:
             counter += 1
             row = rows[i]
 
+            ID = row[objectId_index]
+
             altersgruppe_string = row[altersgruppe_index]
 
             meldeDatum_datetime = datetime.strptime(
@@ -401,52 +436,66 @@ class DB:
             ID_Landkreis = row[idLandkreis_index]
             ID_Bundesland = row[IdBundesland]
 
-            fall_daten_taeglich = models.Fall_Daten_Taeglich(
-                geschlecht=row[geschlecht_index],
-                anzahlFall=row[anzahlFall_index],
-                anzahlTodesFall=row[anzahlTodesFall_index],
-                meldeDatum=meldeDatum_datetime,
-                datenStand=datenStand_timestamp,
-                neuerFall=row[neuerFall_index],
-                neuerTodesFall=row[neuerTodesFall_index],
-                refDatum=refDatum_timestamp,
-                neuGenesen=row[neuGenesen_index],
-                anzahlGenesen=row[anzahlGenesen_index],
-                istErkrankungsbeginn=bool(int(row[istErkrankungsbeginn_index])),
-                altersgruppe2=row[altersgruppe2_index],
+            fall_daten_taeglich = (
+                self.session.query(models.Fall_Daten_Taeglich)
+                .filter_by(ID=ID)
+                .one_or_none()
             )
-            fall_daten_taeglich.altersgruppe = altersgruppe_per_name[
-                altersgruppe_string
-            ]
 
-            """
-
-            wohl doch nicht nötig 
-
-            if int(ID_Landkreis) not in landkreise_per_RS_ID:
-
-                self.logger.error(
-                    "Landkreis with id " + str(ID_Landkreis) + " not in DB"
+            if fall_daten_taeglich is None:
+                fall_daten_taeglich = models.Fall_Daten_Taeglich(
+                    geschlecht=row[geschlecht_index],
+                    anzahlFall=row[anzahlFall_index],
+                    anzahlTodesFall=row[anzahlTodesFall_index],
+                    meldeDatum=meldeDatum_datetime,
+                    datenStand=datenStand_timestamp,
+                    neuerFall=row[neuerFall_index],
+                    neuerTodesFall=row[neuerTodesFall_index],
+                    refDatum=refDatum_timestamp,
+                    neuGenesen=row[neuGenesen_index],
+                    anzahlGenesen=row[anzahlGenesen_index],
+                    istErkrankungsbeginn=bool(int(row[istErkrankungsbeginn_index])),
+                    altersgruppe2=row[altersgruppe2_index],
                 )
-                self.logger.error("the bad id was in row " + str(i))
-                self.logger.error(row)
+                fall_daten_taeglich.altersgruppe = altersgruppe_per_name[
+                    altersgruppe_string
+                ]
 
-                # in der csv Datei zur Erstellung der Landkreise gab es nicht notwendigerweise alle Landkreise
-                print("adding landkreis to db")
-                landkreis = models.Landkreis(
-                    ID=ID_Landkreis,
-                    GEN=row[header.index("Landkreis")],
-                    BL_ID=ID_Bundesland,
+                fall_daten_taeglich.landkreis = landkreise_per_RS_ID[int(ID_Landkreis)]
+                fall_daten_taeglich.bundesland = bundeslaender_per_ID[
+                    int(ID_Bundesland)
+                ]
+                self.session.add(fall_daten_taeglich)
+            else:
+
+                data_to_update = {}
+                data_to_update["geschlecht"] = row[geschlecht_index]
+                data_to_update["anzahlFall"] = row[anzahlFall_index]
+                data_to_update["anzahlTodesFall"] = row[anzahlTodesFall_index]
+                data_to_update["meldeDatum"] = meldeDatum_datetime
+                data_to_update["neuerFall"] = row[neuerFall_index]
+                data_to_update["neuerTodesFall"] = row[neuerTodesFall_index]
+                data_to_update["refDatum"] = refDatum_timestamp
+                data_to_update["neuGenesen"] = row[neuGenesen_index]
+                data_to_update["anzahlGenesen"] = row[anzahlGenesen_index]
+                data_to_update["istErkrankungsbeginn"] = bool(
+                    int(row[istErkrankungsbeginn_index])
                 )
-                self.session.add(landkreis)
-                landkreise_per_RS_ID[int(ID_Landkreis)] = landkreis
-                print("fertig")
-            """
+                data_to_update["altersgruppe2"] = row[altersgruppe2_index]
 
-            fall_daten_taeglich.landkreis = landkreise_per_RS_ID[int(ID_Landkreis)]
-            fall_daten_taeglich.bundesland = bundeslaender_per_ID[int(ID_Bundesland)]
+                for (key, value) in data_to_update:
 
-            self.session.add(fall_daten_taeglich)
+                    if value != getattr(fall_daten_taeglich, key):
+                        self.logger.info(
+                            "updated value for key "
+                            + key
+                            + "="
+                            + str(value)
+                            + " in row "
+                            + str(i + 1)
+                        )
+
+                fall_daten_taeglich
 
             if counter > 10000:
 
@@ -454,6 +503,14 @@ class DB:
                 self.logger.info("adding Faelle, " + str(percent) + "% done")
                 self.session.commit()
                 counter = 0
+        Inserted_csv_File = models.Inserted_csv_File(
+            data_type="Fall",
+            date=date,
+            md5sum=md5(filepath),
+            file_path=filepath,
+            date_file_processed=datetime.now().isoformat(),
+        )
+        self.session.add(Inserted_csv_File)
         self.session.commit()
 
     def _clear_db(self):
@@ -466,7 +523,7 @@ class DB:
         models.Base.metadata.create_all(bind=engine)
         self.session = SessionLocal()
 
-    def create(self, start_date):
+    def create(self, date):
 
         from sqlalchemy.engine import Engine
         from sqlalchemy import event
@@ -482,10 +539,17 @@ class DB:
             cursor.close()
 
         self._clear_db()
-
-        self.insert_bundeslaender_data_from_csv(date=start_date)
-        self.insert_landkreise_data_from_csv(date=start_date)
-        self.insert_faelle_data_from_csv(date=start_date)
+        self.insert_bundeslaender_data_from_csv(
+            date=date,
+            filepath=self.data_dir + "/" + date + "_RKI_Corona_Bundeslaender.csv.gz",
+        )
+        self.insert_landkreise_data_from_csv(
+            date=date,
+            filepath=self.data_dir + "/" + date + "_RKI_Corona_Landkreise.csv.gz",
+        )
+        self.insert_or_update_faelle_data_from_csv(
+            date=date, filepath=self.data_dir + "/" + date + "_RKI_COVID19.csv.gz"
+        )
 
         self.update()
 
@@ -495,4 +559,4 @@ class DB:
 
         self.bundeslaender_data_update_from_csv()
         self.landkreise_data_update_from_csv()
-        # self.faelle_data_update_from_api()
+        self.faelle_data_update_from_csv()
