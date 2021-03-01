@@ -1,6 +1,6 @@
 import sqlite3
 import json
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, load_only
 import logging
 import requests
 import os
@@ -410,6 +410,12 @@ class DB:
 
         counter = 0
 
+        all_IDs = (
+            self.session.query(models.Fall_Daten_Taeglich)
+            .options(load_only("ID"))
+            .all()
+        )
+
         for i in range(1, len(rows)):
             counter += 1
             row = rows[i]
@@ -436,13 +442,16 @@ class DB:
             ID_Landkreis = row[idLandkreis_index]
             ID_Bundesland = row[IdBundesland]
 
+            """
             fall_daten_taeglich = (
                 self.session.query(models.Fall_Daten_Taeglich)
                 .filter_by(ID=ID)
                 .one_or_none()
-            )
+            ) """
 
-            if fall_daten_taeglich is None:
+            if ID not in all_IDs:
+
+                # if fall_daten_taeglich is None:
                 fall_daten_taeglich = models.Fall_Daten_Taeglich(
                     geschlecht=row[geschlecht_index],
                     anzahlFall=row[anzahlFall_index],
