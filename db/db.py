@@ -69,23 +69,25 @@ class DB:
         models.Base.metadata.create_all(bind=engine)
         self.session = SessionLocal()
 
-    def _insert_bundeslaender_landkreise_altersgruppen(self, data):
+    def _sort_data(self, data):
 
-        data_bundeslaender = {}
-
+        sorted_data = {"altersgruppen": [], "bundeslaender_by_id": {}}
         altersgruppen = []
+
+        # first we create the main objects in the tree
+
         for row in data["rows"]:
             ### Altersgruppen
             altersgruppe = row[data["indexes"]["Altersgruppe"]]
-            if altersgruppe not in altersgruppen:
-                altersgruppen.append(altersgruppe)
+            if altersgruppe not in sorted_data["altersgruppen"]:
+                sorted_data["altersgruppen"].append(altersgruppe)
             Meldedatum = row[data["indexes"]["Meldedatum"]]
 
             ### Bundesland
 
             IdBundesland = row[data["indexes"]["IdBundesland"]]
-            if not str(IdBundesland) in data_bundeslaender:
-                data_bundeslaender[str(IdBundesland)] = {
+            if not str(IdBundesland) in sorted_data["bundeslaender_by_id"]:
+                sorted_data["bundeslaender_by_id"][str(IdBundesland)] = {
                     "Name": row[data["indexes"]["Bundesland"]],
                     "daten_nach_meldedatum": {},
                     "landkreise": {},
@@ -93,17 +95,22 @@ class DB:
 
             if (
                 not str(Meldedatum)
-                in data_bundeslaender[str(IdBundesland)]["daten_nach_meldedatum"]
+                in sorted_data["bundeslaender_by_id"][str(IdBundesland)][
+                    "daten_nach_meldedatum"
+                ]
             ):
 
-                data_bundeslaender[str(IdBundesland)]["daten_nach_meldedatum"][
-                    str(Meldedatum)
-                ] = {
+                sorted_data["bundeslaender_by_id"][str(IdBundesland)][
+                    "daten_nach_meldedatum"
+                ][str(Meldedatum)] = {
                     "AnzahlFall": 0,
                     "AnzahlTodesfall": 0,
                     "AnzahlGenesen": 0,
-                    "FaellePro100k": 0,  # row[data["indexes"]["FaellePro100k"]],
-                    "TodesfaellePro100k": 0,  # row[data["indexes"]["TodesfaellePro100k"]],
+                    "AnzahlFallSumme": 0,
+                    "AnzahlTodesfallSumme": 0,
+                    "AnzahlGenesenSumme": 0,
+                    # "FaellePro100k": 0,  # row[data["indexes"]["FaellePro100k"]],
+                    # "TodesfaellePro100k": 0,  # row[data["indexes"]["TodesfaellePro100k"]],
                     "Altersgruppe": row[data["indexes"]["Altersgruppe"]],
                 }
 
@@ -113,10 +120,10 @@ class DB:
 
             if (
                 not str(IdLandkreis)
-                in data_bundeslaender[str(IdBundesland)]["landkreise"]
+                in sorted_data["bundeslaender_by_id"][str(IdBundesland)]["landkreise"]
             ):
 
-                data_bundeslaender[str(IdBundesland)]["landkreise"][
+                sorted_data["bundeslaender_by_id"][str(IdBundesland)]["landkreise"][
                     str(IdLandkreis)
                 ] = {
                     "Name": row[data["indexes"]["Landkreis"]],
@@ -127,119 +134,187 @@ class DB:
 
             if (
                 not str(Meldedatum)
-                in data_bundeslaender[str(IdBundesland)]["landkreise"][
+                in sorted_data["bundeslaender_by_id"][str(IdBundesland)]["landkreise"][
                     str(IdLandkreis)
                 ]["daten_nach_meldedatum"]
             ):
 
-                data_bundeslaender[str(IdBundesland)]["landkreise"][str(IdLandkreis)][
-                    "daten_nach_meldedatum"
-                ][str(Meldedatum)] = {
+                sorted_data["bundeslaender_by_id"][str(IdBundesland)]["landkreise"][
+                    str(IdLandkreis)
+                ]["daten_nach_meldedatum"][str(Meldedatum)] = {
                     # "Bevoelkerung": int(row[data["indexes"]["Bevoelkerung"]]),
                     "AnzahlFall": 0,
                     "AnzahlTodesfall": 0,
                     "AnzahlGenesen": 0,
-                    "FaellePro100k": 0,  # row[data["indexes"]["FaellePro100k"]],
-                    "TodesfaellePro100k": 0,  # row[data["indexes"]["TodesfaellePro100k"]],
+                    # "FaellePro100k": 0,  # row[data["indexes"]["FaellePro100k"]],
+                    # "TodesfaellePro100k": 0,  # row[data["indexes"]["TodesfaellePro100k"]],
                     "Altersgruppe": row[data["indexes"]["Altersgruppe"]],
                 }
 
             for col_name in ["AnzahlFall", "AnzahlTodesfall", "AnzahlGenesen"]:
                 # add to Bundesland
-                data_bundeslaender[str(IdBundesland)]["daten_nach_meldedatum"][
-                    str(Meldedatum)
-                ][col_name] += int(row[int(data["indexes"][col_name])])
-                # add to Landkreis
-                data_bundeslaender[str(IdBundesland)]["landkreise"][str(IdLandkreis)][
+                sorted_data["bundeslaender_by_id"][str(IdBundesland)][
                     "daten_nach_meldedatum"
                 ][str(Meldedatum)][col_name] += int(row[int(data["indexes"][col_name])])
+                # add to Landkreis
+                sorted_data["bundeslaender_by_id"][str(IdBundesland)]["landkreise"][
+                    str(IdLandkreis)
+                ]["daten_nach_meldedatum"][str(Meldedatum)][col_name] += int(
+                    row[int(data["indexes"][col_name])]
+                )
+
+        ## now we accumulate the data
+
+        for IdBundesland in sorted_data["bundeslaender_by_id"]:
+            # Bundesland
+            bundesland = sorted_data["bundeslaender_by_id"][IdBundesland]
+
+            meldedaten_sorted = sorted(list(bundesland["daten_nach_meldedatum"]))
+            stop_at_meldedatum = meldedaten_sorted[0]
+            next_row_exists = True
+            while next_row_exists:
+                AnzahlFallSumme = 0
+                AnzahlTodesfallSumme = 0
+                AnzahlGenesenSumme = 0
+                for i in range(0, len(meldedaten_sorted)):
+                    AnzahlFallSumme += bundesland["daten_nach_meldedatum"][
+                        meldedaten_sorted[i]
+                    ]["AnzahlFall"]
+                    AnzahlTodesfallSumme += bundesland["daten_nach_meldedatum"][
+                        meldedaten_sorted[i]
+                    ]["AnzahlTodesfall"]
+                    AnzahlGenesenSumme += bundesland["daten_nach_meldedatum"][
+                        meldedaten_sorted[i]
+                    ]["AnzahlGenesen"]
+                    if (meldedaten_sorted[i] == stop_at_meldedatum) or (
+                        i == len(meldedaten_sorted) - 1
+                    ):
+                        bundesland["daten_nach_meldedatum"][meldedaten_sorted[i]][
+                            "AnzahlFallSumme"
+                        ] = AnzahlFallSumme
+                        bundesland["daten_nach_meldedatum"][meldedaten_sorted[i]][
+                            "AnzahlTodesfallSumme"
+                        ] = AnzahlTodesfallSumme
+                        bundesland["daten_nach_meldedatum"][meldedaten_sorted[i]][
+                            "AnzahlGenesenSumme"
+                        ] = AnzahlGenesenSumme
+
+                        if i == len(meldedaten_sorted) - 1:
+                            next_row_exists = False
+                            break
+                        stop_at_meldedatum = meldedaten_sorted[i + 1]
+
+            bevoelkerung_bundesland = 0
+            for IdLandkreis in bundesland["landkreise"]:
+                landkreis = bundesland["landkreise"][IdLandkreis]
+
+                # sum up Bevoelkerung d. Bundeslandes
+                bevoelkerung_bundesland += int(landkreis["Bevoelkerung"])
+
+                meldedaten_sorted = sorted(list(landkreis["daten_nach_meldedatum"]))
+                stop_at_meldedatum = meldedaten_sorted[0]
+                next_row_exists = True
+                while next_row_exists:
+                    AnzahlFallSumme = 0
+                    AnzahlTodesfallSumme = 0
+                    AnzahlGenesenSumme = 0
+                    for i in range(0, len(meldedaten_sorted)):
+                        AnzahlFallSumme += landkreis["daten_nach_meldedatum"][
+                            meldedaten_sorted[i]
+                        ]["AnzahlFall"]
+                        AnzahlTodesfallSumme += landkreis["daten_nach_meldedatum"][
+                            meldedaten_sorted[i]
+                        ]["AnzahlTodesfall"]
+                        AnzahlGenesenSumme += landkreis["daten_nach_meldedatum"][
+                            meldedaten_sorted[i]
+                        ]["AnzahlGenesen"]
+                        if (meldedaten_sorted[i] == stop_at_meldedatum) or (
+                            i == len(meldedaten_sorted) - 1
+                        ):
+                            landkreis["daten_nach_meldedatum"][meldedaten_sorted[i]][
+                                "AnzahlFallSumme"
+                            ] = AnzahlFallSumme
+                            landkreis["daten_nach_meldedatum"][meldedaten_sorted[i]][
+                                "AnzahlTodesfallSumme"
+                            ] = AnzahlTodesfallSumme
+                            landkreis["daten_nach_meldedatum"][meldedaten_sorted[i]][
+                                "AnzahlGenesenSumme"
+                            ] = AnzahlGenesenSumme
+
+                            if i == len(meldedaten_sorted) - 1:
+                                next_row_exists = False
+                                break
+                            stop_at_meldedatum = meldedaten_sorted[i + 1]
+
+                bundesland["landkreise"][IdLandkreis] = landkreis
+            bundesland["Bevoelkerung"] = bevoelkerung_bundesland
+
+            sorted_data["bundeslaender_by_id"][str(IdBundesland)] = bundesland
+
+        return sorted_data
+
+    def _insert_sorted_data(self, sorted_data: dict):
 
         # add Altersgruppen:
-
         altersgruppe_per_name = {}
-        for ag_name in altersgruppen:
+        for ag_name in sorted_data["altersgruppen"]:
             altersgruppe = models.Altersgruppe(Name=ag_name)
             self.session.add(altersgruppe)
             altersgruppe_per_name[ag_name] = altersgruppe
         self.session.commit()
 
-        bundeslaender_per_ID = {}
+        for IdBundesland in sorted_data["bundeslaender_by_id"]:
 
-        # sum up some data
-        for IdBundesland in data_bundeslaender:
+            bundesland = sorted_data["bundeslaender_by_id"][IdBundesland]
+            bundesland_sa = models.Bundesland(
+                ID=IdBundesland,
+                Name=bundesland["Name"],
+                Bevoelkerung=bundesland["Bevoelkerung"],
+            )
 
-            # Bundesland
+            meldedaten_sorted = sorted(list(bundesland["daten_nach_meldedatum"]))
+            for meldedatum in meldedaten_sorted:  # bundesland["daten_nach_meldedatum"]:
 
-            bundesland = data_bundeslaender[IdBundesland]
-            bevoelkerung_bundesland = 0
-            for IdLandkreis in bundesland["landkreise"]:
-                landkreis = bundesland["landkreise"][IdLandkreis]
-
-                # meldedaten = list(landkreis["daten_nach_meldedatum"])
-                # print(meldedaten)
-
-                bevoelkerung_bundesland += int(landkreis["Bevoelkerung"])
-
-            print("Bevoelkerung: " + str(bevoelkerung_bundesland))
-            for meldedatum in bundesland["daten_nach_meldedatum"]:
-
-                bundesland["daten_nach_meldedatum"][meldedatum][
-                    "FaellePro100k"
-                ] = round(
-                    bundesland["daten_nach_meldedatum"][meldedatum]["AnzahlFall"]
-                    / (bevoelkerung_bundesland / 100000),
-                    2,
-                )
-
-                bundesland["daten_nach_meldedatum"][meldedatum][
-                    "TodesfaellePro100k"
-                ] = round(
-                    bundesland["daten_nach_meldedatum"][meldedatum]["AnzahlTodesfall"]
-                    / (bevoelkerung_bundesland / 100000),
-                    2,
-                )
-
-            bundesland_sa = models.Bundesland(ID=IdBundesland, Name=bundesland["Name"])
-
-            for meldedatum in bundesland["daten_nach_meldedatum"]:
                 d = bundesland["daten_nach_meldedatum"][meldedatum]
                 bundesland_daten_nach_meldedatum_sa = (
                     models.Bundesland_Daten_Nach_Meldedatum(
                         MeldeDatum=int(meldedatum),
                         AnzahlFall=d["AnzahlFall"],
                         AnzahlTodesfall=d["AnzahlTodesfall"],
-                        AnzahlGenesen=d["AnzahlTodesfall"],
-                        Bevoelkerung=d["AnzahlTodesfall"],
-                        FaellePro100k=d["AnzahlTodesfall"],
-                        TodesfaellePro100k=d["AnzahlTodesfall"],
+                        AnzahlGenesen=d["AnzahlGenesen"],
+                        AnzahlFallSumme=d["AnzahlFallSumme"],
+                        AnzahlTodesfallSumme=d["AnzahlTodesfallSumme"],
+                        AnzahlGenesenSumme=d["AnzahlGenesenSumme"],
                         Altersgruppe=altersgruppe_per_name[d["Altersgruppe"]],
                     )
                 )
                 bundesland_sa.daten_nach_meldedatum.append(
                     bundesland_daten_nach_meldedatum_sa
                 )
-            self.session.add(bundesland_sa)
 
             for IdLandkreis in bundesland["landkreise"]:
                 landkreis = bundesland["landkreise"][IdLandkreis]
+
                 landkreis_sa = models.Landkreis(
                     Name=landkreis["Name"],
                     Typ=landkreis["Typ"],
                     Bevoelkerung=landkreis["Bevoelkerung"],
                 )
-                print(landkreis["Name"])
 
-                for meldedatum in landkreis["daten_nach_meldedatum"]:
+                meldedaten_sorted = sorted(list(landkreis["daten_nach_meldedatum"]))
+                for (
+                    meldedatum
+                ) in meldedaten_sorted:  # landkreis["daten_nach_meldedatum"]:
                     d = landkreis["daten_nach_meldedatum"][meldedatum]
                     landkreis_daten_nach_meldedatum_sa = (
                         models.Landkreis_Daten_Nach_Meldedatum(
                             MeldeDatum=int(meldedatum),
                             AnzahlFall=d["AnzahlFall"],
                             AnzahlTodesfall=d["AnzahlTodesfall"],
-                            AnzahlGenesen=d["AnzahlTodesfall"],
-                            Bevoelkerung=d["AnzahlTodesfall"],
-                            FaellePro100k=d["AnzahlTodesfall"],
-                            TodesfaellePro100k=d["AnzahlTodesfall"],
+                            AnzahlGenesen=d["AnzahlGenesen"],
+                            AnzahlFallSumme=d["AnzahlFallSumme"],
+                            AnzahlTodesfallSumme=d["AnzahlTodesfallSumme"],
+                            AnzahlGenesenSumme=d["AnzahlGenesenSumme"],
                             Altersgruppe=altersgruppe_per_name[d["Altersgruppe"]],
                         )
                     )
@@ -248,11 +323,11 @@ class DB:
                     )
 
                 bundesland_sa.landkreise.append(landkreis_sa)
-            self.session.commit()
 
-        # print(data_bundeslaender)
+            self.session.add(bundesland_sa)
+        self.session.commit()
 
-    def create(self, date):
+    def create(self, date, full_data_file_path):
 
         from sqlalchemy.engine import Engine
         from sqlalchemy import event
@@ -270,9 +345,15 @@ class DB:
 
         self._clear_db()
         data = read_data_from_csv(
-            csv_file_path="downloads/full-data.csv",
+            csv_file_path=full_data_file_path,
             expected_header_line="IdBundesland,Bundesland,Landkreis,Altersgruppe,Geschlecht,AnzahlFall,AnzahlTodesfall,ObjectId,Meldedatum,IdLandkreis,Datenstand,NeuerFall,NeuerTodesfall,Refdatum,NeuGenesen,AnzahlGenesen,IstErkrankungsbeginn,Altersgruppe2,globalID,caseHash,msgHash,RefDay,MeldeDay,LandkreisName,LandkreisTyp,NeuerFallKlar,newBeforeDay,newCaseBeforeDay,RefdatumKlar,MeldedatumKlar,AnzahlFallLfd,AnzahlTodesfallLfd,Bevoelkerung,FaellePro100k,TodesfaellePro100k,isStadt,ErkDay,newCaseOnDay,newOnDay,caseDelay,NeuerTodesfallKlar,newDeathBeforeDay,missingSinceDay,newDeathOnDay,deathDelay,missingCasesInOldRecord,poppedUpOnDay",
         )
-        self._insert_bundeslaender_landkreise_altersgruppen(data)
+        sorted_data = self._sort_data(data)
+        # print(sorted_data)
+        f = open("dump.json", "w")
+
+        f.write(json.dumps(sorted_data))
+        data = None
+        self._insert_sorted_data(sorted_data)
         # self.insert_landkreise_data(full_data)
         # self.insert_faelle_data(full_data)

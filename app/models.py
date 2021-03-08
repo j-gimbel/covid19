@@ -23,21 +23,23 @@ class Bundesland(Base):
     daten_nach_meldedatum = relationship(
         "Bundesland_Daten_Nach_Meldedatum", back_populates="bundesland"
     )
+    Bevoelkerung = Column(Integer, nullable=False)
 
     alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="bundesland")
 
 
 class Bundesland_Daten_Nach_Meldedatum(Base):
     __tablename__ = "bundeslaender_daten_nach_meldedatum"
-    __table_args__ = (UniqueConstraint("ID", "MeldeDatum"),)
+    # __table_args__ = (UniqueConstraint("ID", "MeldeDatum"),)
     ID = Column(Integer, primary_key=True, index=True)
-    MeldeDatum = Column(Integer, nullable=False)
+    MeldeDatum = Column(Integer, nullable=False, index=True)
     AnzahlFall = Column(Integer, nullable=False)
     AnzahlTodesfall = Column(Integer, nullable=False)
     AnzahlGenesen = Column(Integer, nullable=False)
-    Bevoelkerung = Column(Integer, nullable=False)
-    FaellePro100k = Column(Integer, nullable=False)
-    TodesfaellePro100k = Column(Integer, nullable=False)
+
+    AnzahlFallSumme = Column(Integer, nullable=False)
+    AnzahlTodesfallSumme = Column(Integer, nullable=False)
+    AnzahlGenesenSumme = Column(Integer, nullable=False)
 
     # up
     bundesland_id = Column(Integer, ForeignKey("bundeslaender.ID"))
@@ -79,13 +81,13 @@ class Landkreis(Base):
 class Landkreis_Daten_Nach_Meldedatum(Base):
     __tablename__ = "landkreise_daten_nach_meldedatum"
     ID = Column(Integer, primary_key=True, index=True)
-    MeldeDatum = Column(Integer, nullable=False)
+    MeldeDatum = Column(Integer, nullable=False, index=True)
     AnzahlFall = Column(Integer, nullable=False)
     AnzahlTodesfall = Column(Integer, nullable=False)
     AnzahlGenesen = Column(Integer, nullable=False)
-    Bevoelkerung = Column(Integer, nullable=False)
-    FaellePro100k = Column(Integer, nullable=False)
-    TodesfaellePro100k = Column(Integer, nullable=False)
+    AnzahlFallSumme = Column(Integer, nullable=False)
+    AnzahlTodesfallSumme = Column(Integer, nullable=False)
+    AnzahlGenesenSumme = Column(Integer, nullable=False)
 
     # up
     landkreis_id = Column(Integer, ForeignKey("landkreise.ID"))
@@ -117,18 +119,12 @@ class Fall_Daten_Taeglich(Base):
     __tablename__ = "faelle_daten_taeglich"
     # __table_args__ = (UniqueConstraint("name", "typ", name="_lk_name_typ_uc"),)
     ID = Column(Integer, primary_key=True, index=True)
-    geschlecht = Column(String)
-    anzahlFall = Column(Integer)
-    anzahlTodesFall = Column(Integer)
-    meldeDatum = Column(Integer)
-    datenStand = Column(Integer)
-    neuerFall = Column(Integer)  # 0/-1/-9
-    neuerTodesFall = Column(Integer)  # 0/-1/-9
-    refDatum = Column(Integer)
-    neuGenesen = Column(Integer)  # 0/-1/-9
-    anzahlGenesen = Column(Integer)  # 0/-1/-9
-    istErkrankungsbeginn = Column(Boolean)  # 0/1
-    altersgruppe2 = Column(String)
+
+    Geschlecht = Column(String)
+    MeldeDatum = Column(Integer, nullable=False, index=True)
+    AnzahlFall = Column(Integer, nullable=False)
+    AnzahlTodesfall = Column(Integer, nullable=False)
+    AnzahlGenesen = Column(Integer, nullable=False)
 
     # Pavel
     """
