@@ -15,34 +15,43 @@ from .database import Base
 class Bundesland(Base):
     __tablename__ = "bundeslaender"
     ID = Column(Integer, primary_key=True, index=True)
-    LAN_ew_GEN = Column(String, unique=True, index=True)
-    LAN_ew_BEZ = Column(String)
-    LAN_ew_EWZ = Column(Integer)
+
+    Name = Column(String, nullable=False)
 
     # down
     landkreise = relationship("Landkreis", back_populates="bundesland")
-    taegliche_daten = relationship(
-        "Bundesland_Daten_Taeglich", back_populates="bundesland"
+    daten_nach_meldedatum = relationship(
+        "Bundesland_Daten_Nach_Meldedatum", back_populates="bundesland"
     )
 
-    faelle = relationship("Fall_Daten_Taeglich", back_populates="bundesland")
+    alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="bundesland")
 
 
-class Bundesland_Daten_Taeglich(Base):
-    __tablename__ = "bundeslaender_daten_taeglich"
+class Bundesland_Daten_Nach_Meldedatum(Base):
+    __tablename__ = "bundeslaender_daten_nach_meldedatum"
+    __table_args__ = (UniqueConstraint("ID", "MeldeDatum"),)
     ID = Column(Integer, primary_key=True, index=True)
-    Fallzahl = Column(Integer)
-    Aktualisierung = Column(Integer)
-    faelle_100000_EW = Column(Float)
-    Death = Column(Integer)
-    cases7_bl_per_100k = Column(Float)
-    cases7_bl = Column(Integer)
-    death7_bl = Column(Float)
+    MeldeDatum = Column(Integer, nullable=False)
+    AnzahlFall = Column(Integer, nullable=False)
+    AnzahlTodesfall = Column(Integer, nullable=False)
+    AnzahlGenesen = Column(Integer, nullable=False)
+    Bevoelkerung = Column(Integer, nullable=False)
+    FaellePro100k = Column(Integer, nullable=False)
+    TodesfaellePro100k = Column(Integer, nullable=False)
 
     # up
     bundesland_id = Column(Integer, ForeignKey("bundeslaender.ID"))
     bundesland = relationship(
-        "Bundesland", back_populates="taegliche_daten", lazy="joined"
+        "Bundesland", back_populates="daten_nach_meldedatum", lazy="joined"
+    )
+
+    Altersgruppe_id = Column(Integer, ForeignKey("altersgruppen.id"))
+    Altersgruppe = relationship("Altersgruppe", back_populates="bundesland_faelle")
+
+    # down
+
+    Zugehoerige_faelle = relationship(
+        "Fall_Daten_Taeglich", back_populates="bundesland_meldedatum"
     )
 
 
@@ -50,11 +59,9 @@ class Landkreis(Base):
     __tablename__ = "landkreise"
     # __table_args__ = (UniqueConstraint("name", "typ", name="_lk_name_typ_uc"),)
     ID = Column(Integer, primary_key=True, index=True)
-    RS = Column(Integer)
-    AGS = Column(Integer)
-    GEN = Column(String, index=True)
-    BEZ = Column(String)
-    EWZ = Column(Integer)
+    Name = Column(String, nullable=False)
+    Typ = Column(String, nullable=False)
+    Bevoelkerung = Column(Integer, nullable=False)
 
     # up
     BL_ID = Column(Integer, ForeignKey("bundeslaender.ID"))
@@ -62,39 +69,48 @@ class Landkreis(Base):
 
     # down
 
-    faelle = relationship("Fall_Daten_Taeglich", back_populates="landkreis")
-    taegliche_daten = relationship(
-        "Landkreis_Daten_Taeglich", back_populates="landkreis"
+    daten_nach_meldedatum = relationship(
+        "Landkreis_Daten_Nach_Meldedatum", back_populates="landkreis"
     )
 
+    alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="landkreis")
 
-class Landkreis_Daten_Taeglich(Base):
-    __tablename__ = "landkreise_daten_taeglich"
+
+class Landkreis_Daten_Nach_Meldedatum(Base):
+    __tablename__ = "landkreise_daten_nach_meldedatum"
     ID = Column(Integer, primary_key=True, index=True)
-    death_rate = Column(Float)
-    cases = Column(Integer)
-    deaths = Column(Integer)
-    cases_per_100k = Column(Float)
-    cases_per_population = Column(Float)
-    county = Column(String, index=True)  # Landkreis name
-    last_update = Column(Integer)
-    cases7_per_100k = Column(Float)
-    cases7_lk = Column(Integer)
-    death7_lk = Column(Integer)
+    MeldeDatum = Column(Integer, nullable=False)
+    AnzahlFall = Column(Integer, nullable=False)
+    AnzahlTodesfall = Column(Integer, nullable=False)
+    AnzahlGenesen = Column(Integer, nullable=False)
+    Bevoelkerung = Column(Integer, nullable=False)
+    FaellePro100k = Column(Integer, nullable=False)
+    TodesfaellePro100k = Column(Integer, nullable=False)
 
     # up
     landkreis_id = Column(Integer, ForeignKey("landkreise.ID"))
-    landkreis = relationship("Landkreis", back_populates="taegliche_daten")
+    landkreis = relationship("Landkreis", back_populates="daten_nach_meldedatum")
+
+    Altersgruppe_id = Column(Integer, ForeignKey("altersgruppen.id"))
+    Altersgruppe = relationship("Altersgruppe", back_populates="landkreis_faelle")
 
 
 class Altersgruppe(Base):
     __tablename__ = "altersgruppen"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
+    Name = Column(String, index=True)
 
     # down
 
-    faelle = relationship("Fall_Daten_Taeglich", back_populates="altersgruppe")
+    bundesland_faelle = relationship(
+        "Bundesland_Daten_Nach_Meldedatum", back_populates="Altersgruppe"
+    )
+
+    landkreis_faelle = relationship(
+        "Landkreis_Daten_Nach_Meldedatum", back_populates="Altersgruppe"
+    )
+
+    alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="Altersgruppe")
 
 
 class Fall_Daten_Taeglich(Base):
@@ -141,14 +157,21 @@ class Fall_Daten_Taeglich(Base):
     poppedUpOnDay = Column(Integer)
     """
     # up
-    altersgruppe_id = Column(Integer, ForeignKey("altersgruppen.id"))
-    altersgruppe = relationship("Altersgruppe", back_populates="faelle")
+    Altersgruppe_id = Column(Integer, ForeignKey("altersgruppen.id"))
+    Altersgruppe = relationship("Altersgruppe", back_populates="alle_faelle")
 
     landkreis_id = Column(Integer, ForeignKey("landkreise.ID"))
-    landkreis = relationship("Landkreis", back_populates="faelle")
+    landkreis = relationship("Landkreis", back_populates="alle_faelle")
 
     bundesland_id = Column(Integer, ForeignKey("bundeslaender.ID"))
-    bundesland = relationship("Bundesland", back_populates="faelle")
+    bundesland = relationship("Bundesland", back_populates="alle_faelle")
+
+    bundesland_meldedatum_id = Column(
+        Integer, ForeignKey("bundeslaender_daten_nach_meldedatum.ID")
+    )
+    bundesland_meldedatum = relationship(
+        "Bundesland_Daten_Nach_Meldedatum", back_populates="Zugehoerige_faelle"
+    )
 
 
 class Inserted_csv_File(Base):

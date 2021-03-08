@@ -16,6 +16,7 @@ passlib = {extras = ["bcrypt"], version = "*"}
 jupyterlab = "*"
 mysqlclient = "*"
 matplotlib = "*"
+gsutil = "*"
 
 [dev-packages]
 black = "*"
