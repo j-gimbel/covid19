@@ -1,1 +1,1 @@
-set SQLALCHEMY_DATABASE_URL="sqlite:///./database.db"
+set SQLALCHEMY_DATABASE_URL=sqlite:///database.db

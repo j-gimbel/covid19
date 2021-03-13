@@ -1,15 +1,14 @@
-import sqlite3
 import json
-from sqlalchemy.orm import Session, load_only
+# from sqlalchemy.orm import Session, load_only
 import logging
-import requests
+# import requests
 import os
 import csv
-import shutil
-import gzip
-import glob
-import re
-from datetime import date, datetime, timedelta
+# import shutil
+# import gzip
+# import glob
+# import re
+# from datetime import date, datetime, timedelta
 
 from app import models  # ,crud,  schemas
 from app.database import SessionLocal, engine
@@ -69,18 +68,26 @@ class DB:
         models.Base.metadata.create_all(bind=engine)
         self.session = SessionLocal()
 
-    def _sort_data(self, data):
+    def _sort_data(self, with_agegroups, data):
+        sorted_data = {"bundeslaender_by_id": {}}
+
+        return sorted_data
+
+    def _sort_data_old(self, with_agegroups, data):
 
         sorted_data = {"altersgruppen": [], "bundeslaender_by_id": {}}
-        altersgruppen = []
+        #altersgruppen = []
 
         # first we create the main objects in the tree
 
         for row in data["rows"]:
             # Altersgruppen
-            altersgruppe = row[data["indexes"]["Altersgruppe"]]
-            if altersgruppe not in sorted_data["altersgruppen"]:
-                sorted_data["altersgruppen"].append(altersgruppe)
+
+            if with_agegroups:
+                altersgruppe = row[data["indexes"]["Altersgruppe"]]
+                if altersgruppe not in sorted_data["altersgruppen"]:
+                    sorted_data["altersgruppen"].append(altersgruppe)
+
             Meldedatum = row[data["indexes"]["Meldedatum"]]
 
             # Bundesland
@@ -332,7 +339,7 @@ class DB:
             self.session.add(bundesland_sa)
         self.session.commit()
 
-    def create(self, full_data_file_path):
+    def create(self, with_agegroups: bool, full_data_file_path: str):
 
         from sqlalchemy.engine import Engine
         from sqlalchemy import event
@@ -349,10 +356,13 @@ class DB:
             cursor.close()
 
         self._clear_db()
-        data = read_data_from_csv(
-            csv_file_path=full_data_file_path,
-            expected_header_line="DatenstandTag,AnzahlFall,AnzahlFallNeu,AnzahlTodesfall,AnzahlTodesfallNeu,AnzahlGenesen,AnzahlGenesenNeu,IdLandkreis,Landkreis,IdBundesland,Bundesland,Flaeche,Einwohner,Dichte,InzidenzFallNeu,InzidenzTodesfallNeu,InzidenzFall,InzidenzTodesfall,AnzahlFallNeu-7-Tage,AnzahlFallNeu-7-Tage-Trend,AnzahlFallNeu-7-Tage-7-Tage-davor,AnzahlTodesfallNeu-7-Tage,AnzahlTodesfallNeu-7-Tage-Trend,AnzahlTodesfallNeu-7-Tage-7-Tage-davor,AnzahlGenesenNeu-7-Tage,AnzahlGenesenNeu-7-Tage-Trend,InzidenzFallNeu-7-Tage,InzidenzFallNeu-7-Tage-Trend,InzidenzFallNeu-7-Tage-7-Tage-davor,InzidenzFallNeu-7-Tage-Trend-Spezial,InzidenzFallNeu-7-Tage-R,InzidenzFallNeu-Prognose-1-Wochen,InzidenzFallNeu-Prognose-2-Wochen,InzidenzFallNeu-Prognose-4-Wochen,InzidenzFallNeu-Prognose-8-Wochen,InzidenzFallNeu-Tage-bis-50,InzidenzFallNeu-Tage-bis-100,Kontaktrisiko,InzidenzTodesfallNeu-7-Tage,InzidenzTodesfallNeu-7-Tage-Trend,InzidenzTodesfallNeu-7-Tage-7-Tage-davor,InzidenzTodesfallNeu-7-Tage-Trend-Spezial")
-        sorted_data = self._sort_data(data)
+
+        if with_agegroups:
+            data = read_data_from_csv(csv_file_path=full_data_file_path, expected_header_line="DatenstandTag,Datum,IdLandkreis,Landkreis,LandkreisTyp,IdBundesland,Bundesland,Flaeche,AnzahlFall,AnzahlFallNeu,AnzahlTodesfall,AnzahlTodesfallNeu,AnzahlGenesen,AnzahlGenesenNeu,Einwohner,Dichte,InzidenzFallNeu,InzidenzTodesfallNeu,InzidenzFall,InzidenzTodesfall,AnzahlFallNeu-7-Tage,AnzahlFallNeu-7-Tage-Trend,AnzahlFallNeu-7-Tage-7-Tage-davor,AnzahlTodesfallNeu-7-Tage,AnzahlTodesfallNeu-7-Tage-Trend,AnzahlTodesfallNeu-7-Tage-7-Tage-davor,AnzahlGenesenNeu-7-Tage,AnzahlGenesenNeu-7-Tage-Trend,InzidenzFallNeu-7-Tage,InzidenzFallNeu-7-Tage-Trend,InzidenzFallNeu-7-Tage-7-Tage-davor,InzidenzFallNeu-7-Tage-Trend-Spezial,InzidenzFallNeu-7-Tage-R,InzidenzFallNeu-Prognose-1-Wochen,InzidenzFallNeu-Prognose-2-Wochen,InzidenzFallNeu-Prognose-4-Wochen,InzidenzFallNeu-Prognose-8-Wochen,InzidenzFallNeu-Tage-bis-50,InzidenzFallNeu-Tage-bis-100,Kontaktrisiko,InzidenzTodesfallNeu-7-Tage,InzidenzTodesfallNeu-7-Tage-Trend,InzidenzTodesfallNeu-7-Tage-7-Tage-davor,InzidenzTodesfallNeu-7-Tage-Trend-Spezial")
+        else:
+            data = read_data_from_csv(csv_file_path=full_data_file_path, expected_header_line="DatenstandTag,Datum,IdLandkreis,Landkreis,LandkreisTyp,IdBundesland,Bundesland,Flaeche,AnzahlFall,AnzahlFallNeu,AnzahlTodesfall,AnzahlTodesfallNeu,AnzahlGenesen,AnzahlGenesenNeu,Einwohner,Dichte,InzidenzFallNeu,InzidenzTodesfallNeu,InzidenzFall,InzidenzTodesfall,AnzahlFallNeu-7-Tage,AnzahlFallNeu-7-Tage-Trend,AnzahlFallNeu-7-Tage-7-Tage-davor,AnzahlTodesfallNeu-7-Tage,AnzahlTodesfallNeu-7-Tage-Trend,AnzahlTodesfallNeu-7-Tage-7-Tage-davor,AnzahlGenesenNeu-7-Tage,AnzahlGenesenNeu-7-Tage-Trend,InzidenzFallNeu-7-Tage,InzidenzFallNeu-7-Tage-Trend,InzidenzFallNeu-7-Tage-7-Tage-davor,InzidenzFallNeu-7-Tage-Trend-Spezial,InzidenzFallNeu-7-Tage-R,InzidenzFallNeu-Prognose-1-Wochen,InzidenzFallNeu-Prognose-2-Wochen,InzidenzFallNeu-Prognose-4-Wochen,InzidenzFallNeu-Prognose-8-Wochen,InzidenzFallNeu-Tage-bis-50,InzidenzFallNeu-Tage-bis-100,Kontaktrisiko,InzidenzTodesfallNeu-7-Tage,InzidenzTodesfallNeu-7-Tage-Trend,InzidenzTodesfallNeu-7-Tage-7-Tage-davor,InzidenzTodesfallNeu-7-Tage-Trend-Spezial")
+
+        sorted_data = self._sort_data(with_agegroups, data)
         # print(sorted_data)
         f = open("dump.json", "w")
 

@@ -1,6 +1,7 @@
 from .db import DB
 import argparse
 import os
+import sys
 
 if __name__ == "__main__":
 
@@ -11,17 +12,20 @@ if __name__ == "__main__":
         help="put start date as ISO-date (2021-02-28) from where to create db, must be an existing csv file in downloads",
     )
     """
+
+    parser.add_argument("--agegroups", help="assume age groups in ", action="store_true")
+
     parser.add_argument(
-        "full_data_file_path",
-        help="full-data.csv file from P. Mayer",
+        "all_series_csv_filepath",
+        help="all-series.csv file from P. Mayer",
     )
     args = parser.parse_args()
     # try:
     db = DB()
 
-    if not os.path.isfile(args.full_data_file_path):
-        print("file " + args.full_data_file_path + " not found")
+    if not os.path.isfile(args.all_series_csv_filepath):
+        print("file " + args.all_series_csv_filepath + " not found")
         sys.exit(1)
-    db.create(args.full_data_file_path)
+    db.create(args.agegroups, args.all_series_csv_filepath)
     # except Exception as e:
     #    print(e)
