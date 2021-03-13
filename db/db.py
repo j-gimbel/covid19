@@ -77,13 +77,13 @@ class DB:
         # first we create the main objects in the tree
 
         for row in data["rows"]:
-            ### Altersgruppen
+            # Altersgruppen
             altersgruppe = row[data["indexes"]["Altersgruppe"]]
             if altersgruppe not in sorted_data["altersgruppen"]:
                 sorted_data["altersgruppen"].append(altersgruppe)
             Meldedatum = row[data["indexes"]["Meldedatum"]]
 
-            ### Bundesland
+            # Bundesland
 
             IdBundesland = row[data["indexes"]["IdBundesland"]]
             if not str(IdBundesland) in sorted_data["bundeslaender_by_id"]:
@@ -163,13 +163,14 @@ class DB:
                     row[int(data["indexes"][col_name])]
                 )
 
-        ## now we accumulate the data
+        # now we accumulate the data
 
         for IdBundesland in sorted_data["bundeslaender_by_id"]:
             # Bundesland
             bundesland = sorted_data["bundeslaender_by_id"][IdBundesland]
 
-            meldedaten_sorted = sorted(list(bundesland["daten_nach_meldedatum"]))
+            meldedaten_sorted = sorted(
+                list(bundesland["daten_nach_meldedatum"]))
             stop_at_meldedatum = meldedaten_sorted[0]
             next_row_exists = True
             while next_row_exists:
@@ -211,7 +212,8 @@ class DB:
                 # sum up Bevoelkerung d. Bundeslandes
                 bevoelkerung_bundesland += int(landkreis["Bevoelkerung"])
 
-                meldedaten_sorted = sorted(list(landkreis["daten_nach_meldedatum"]))
+                meldedaten_sorted = sorted(
+                    list(landkreis["daten_nach_meldedatum"]))
                 stop_at_meldedatum = meldedaten_sorted[0]
                 next_row_exists = True
                 while next_row_exists:
@@ -272,8 +274,10 @@ class DB:
                 Bevoelkerung=bundesland["Bevoelkerung"],
             )
 
-            meldedaten_sorted = sorted(list(bundesland["daten_nach_meldedatum"]))
-            for meldedatum in meldedaten_sorted:  # bundesland["daten_nach_meldedatum"]:
+            meldedaten_sorted = sorted(
+                list(bundesland["daten_nach_meldedatum"]))
+            # bundesland["daten_nach_meldedatum"]:
+            for meldedatum in meldedaten_sorted:
 
                 d = bundesland["daten_nach_meldedatum"][meldedatum]
                 bundesland_daten_nach_meldedatum_sa = (
@@ -301,7 +305,8 @@ class DB:
                     Bevoelkerung=landkreis["Bevoelkerung"],
                 )
 
-                meldedaten_sorted = sorted(list(landkreis["daten_nach_meldedatum"]))
+                meldedaten_sorted = sorted(
+                    list(landkreis["daten_nach_meldedatum"]))
                 for (
                     meldedatum
                 ) in meldedaten_sorted:  # landkreis["daten_nach_meldedatum"]:
@@ -327,7 +332,7 @@ class DB:
             self.session.add(bundesland_sa)
         self.session.commit()
 
-    def create(self, date, full_data_file_path):
+    def create(self, full_data_file_path):
 
         from sqlalchemy.engine import Engine
         from sqlalchemy import event
@@ -346,8 +351,7 @@ class DB:
         self._clear_db()
         data = read_data_from_csv(
             csv_file_path=full_data_file_path,
-            expected_header_line="IdBundesland,Bundesland,Landkreis,Altersgruppe,Geschlecht,AnzahlFall,AnzahlTodesfall,ObjectId,Meldedatum,IdLandkreis,Datenstand,NeuerFall,NeuerTodesfall,Refdatum,NeuGenesen,AnzahlGenesen,IstErkrankungsbeginn,Altersgruppe2,globalID,caseHash,msgHash,RefDay,MeldeDay,LandkreisName,LandkreisTyp,NeuerFallKlar,newBeforeDay,newCaseBeforeDay,RefdatumKlar,MeldedatumKlar,AnzahlFallLfd,AnzahlTodesfallLfd,Bevoelkerung,FaellePro100k,TodesfaellePro100k,isStadt,ErkDay,newCaseOnDay,newOnDay,caseDelay,NeuerTodesfallKlar,newDeathBeforeDay,missingSinceDay,newDeathOnDay,deathDelay,missingCasesInOldRecord,poppedUpOnDay",
-        )
+            expected_header_line="DatenstandTag,AnzahlFall,AnzahlFallNeu,AnzahlTodesfall,AnzahlTodesfallNeu,AnzahlGenesen,AnzahlGenesenNeu,IdLandkreis,Landkreis,IdBundesland,Bundesland,Flaeche,Einwohner,Dichte,InzidenzFallNeu,InzidenzTodesfallNeu,InzidenzFall,InzidenzTodesfall,AnzahlFallNeu-7-Tage,AnzahlFallNeu-7-Tage-Trend,AnzahlFallNeu-7-Tage-7-Tage-davor,AnzahlTodesfallNeu-7-Tage,AnzahlTodesfallNeu-7-Tage-Trend,AnzahlTodesfallNeu-7-Tage-7-Tage-davor,AnzahlGenesenNeu-7-Tage,AnzahlGenesenNeu-7-Tage-Trend,InzidenzFallNeu-7-Tage,InzidenzFallNeu-7-Tage-Trend,InzidenzFallNeu-7-Tage-7-Tage-davor,InzidenzFallNeu-7-Tage-Trend-Spezial,InzidenzFallNeu-7-Tage-R,InzidenzFallNeu-Prognose-1-Wochen,InzidenzFallNeu-Prognose-2-Wochen,InzidenzFallNeu-Prognose-4-Wochen,InzidenzFallNeu-Prognose-8-Wochen,InzidenzFallNeu-Tage-bis-50,InzidenzFallNeu-Tage-bis-100,Kontaktrisiko,InzidenzTodesfallNeu-7-Tage,InzidenzTodesfallNeu-7-Tage-Trend,InzidenzTodesfallNeu-7-Tage-7-Tage-davor,InzidenzTodesfallNeu-7-Tage-Trend-Spezial")
         sorted_data = self._sort_data(data)
         # print(sorted_data)
         f = open("dump.json", "w")

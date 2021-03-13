@@ -14,13 +14,11 @@ typing = "*"
 python-jose = {extras = ["cryptography"], version = "*"}
 passlib = {extras = ["bcrypt"], version = "*"}
 jupyterlab = "*"
-mysqlclient = "*"
 matplotlib = "*"
 gsutil = "*"
 
 [dev-packages]
-black = "*"
-flake8 = "*"
+autopep8 = "*"
 
 [requires]
 python_version = "3.9"
