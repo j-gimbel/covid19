@@ -16,13 +16,13 @@ class Bundesrepublik(Base):
     __tablename__ = "bundesrepublik"
     ID = Column(Integer, primary_key=True, index=True)
 
-    flaeche = Column(Float)
-    dichte = Column(Float)
-    einwohner = Column(Integer)
+    Flaeche = Column(Float)
+    Dichte = Column(Float)
+    Einwohner = Column(Integer)
 
     # down
-    bundeslaender = relationship("Bundesland", back_populates="bundesrepublik")
-    daten = relationship("Bundesrepublik_Daten", back_populates="bundesrepublik")
+    Bundeslaender = relationship("Bundesland", back_populates="Bundesrepublik")
+    Daten = relationship("Bundesrepublik_Daten", back_populates="Bundesrepublik")
 
 class Bundesrepublik_Daten(Base):
     __tablename__ = "bundesrepublik_daten"
@@ -36,10 +36,24 @@ class Bundesrepublik_Daten(Base):
     AnzahlTodesfallNeu = Column(Integer)
     AnzahlGenesen = Column(Integer)
     AnzahlGenesenNeu = Column(Integer)
+
+    AnzahlFallNeu_Meldung_letze_7_Tage = Column(Integer)
+    AnzahlFallNeu_Meldung_letze_14_Tage = Column(Integer)
+    MeldeDauerFallNeu_Min = Column(Integer)
+    MeldeDauerFallNeu_Max = Column(Integer)
+    MeldeDauerFallNeu_Schnitt = Column(Float)
+    MeldeDauerFallNeu_Median = Column(Float)
+    MeldeDauerFallNeu_StdAbw = Column(Float)
+    MeldeDauerFallNeu_Fallbasis = Column(Integer)
+    DatenstandTag_Max = Column(Integer)
+
     InzidenzFallNeu = Column(Float)
     InzidenzTodesfallNeu = Column(Float)
     InzidenzFall = Column(Float)
     InzidenzTodesfall = Column(Float)
+
+    Fallsterblichkeit_Prozent = Column(Float)
+
     AnzahlFallNeu_7_Tage = Column(Integer)
     AnzahlFallNeu_7_Tage_Trend = Column(Float)
     AnzahlFallNeu_7_Tage_7_Tage_davor = Column(Integer)
@@ -48,6 +62,24 @@ class Bundesrepublik_Daten(Base):
     AnzahlTodesfallNeu_7_Tage_7_Tage_davor = Column(Integer)
     AnzahlGenesenNeu_7_Tage = Column(Integer)
     AnzahlGenesenNeu_7_Tage_Trend = Column(Float)
+
+    AnzahlFallNeu_Meldung_letze_7_Tage_7_Tage = Column(Integer)
+    AnzahlFallNeu_Meldung_letze_7_Tage_7_Tage_Trend = Column(Float)
+    AnzahlFallNeu_Meldung_letze_14_Tage_7_Tage = Column(Integer)
+    AnzahlFallNeu_Meldung_letze_14_Tage_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Min_7_Tage = Column(Integer)
+    MeldeDauerFallNeu_Min_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Max_7_Tage = Column(Integer)
+    MeldeDauerFallNeu_Max_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Schnitt_7_Tage = Column(Float)
+    MeldeDauerFallNeu_Schnitt_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Median_7_Tage = Column(Float)
+    MeldeDauerFallNeu_Median_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_StdAbw_7_Tage = Column(Float)
+    MeldeDauerFallNeu_StdAbw_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Fallbasis_7_Tage = Column(Integer)
+    MeldeDauerFallNeu_Fallbasis_7_Tage_Trend = Column(Float)
+
     InzidenzFallNeu_7_Tage = Column(Float)
     InzidenzFallNeu_7_Tage_Trend = Column(Float)
     InzidenzFallNeu_7_Tage_7_Tage_davor = Column(Float)
@@ -65,10 +97,16 @@ class Bundesrepublik_Daten(Base):
     InzidenzTodesfallNeu_7_Tage_7_Tage_davor = Column(Float)
     InzidenzTodesfallNeu_7_Tage_Trend_Spezial = Column(Float)
 
+    DatenstandTag_Diff = Column(Integer)
+    InzidenzFallNeu_Meldung_letze_7_Tage_7_Tage = Column(Float)
+    AnzahlFallNeu_7_Tage_Dropped = Column(Integer)
+    ProzentFallNeu_7_Tage_Dropped = Column(Float)
+    MeldeDauerFallNeu_Min_Neg = Column(Integer)
+
     # up
-    bundesrepublik_id = Column(Integer, ForeignKey("bundesrepublik.ID"))
-    bundesrepublik = relationship(
-        "Bundesrepublik", back_populates="daten", lazy="joined"
+    Bundesrepublik_ID = Column(Integer, ForeignKey("bundesrepublik.ID"))
+    Bundesrepublik = relationship(
+        "Bundesrepublik", back_populates="Daten", lazy="joined"
     )
 
 
@@ -76,19 +114,20 @@ class Bundesland(Base):
     __tablename__ = "bundeslaender"
     ID = Column(Integer, primary_key=True, index=True)
 
-    name = Column(String, nullable=False)
-    flaeche = Column(Float)
-    dichte = Column(Float)
-    einwohner = Column(Integer)
+    Name = Column(String, nullable=False)
+    Kuerzel = Column(String, nullable=False)
+    Flaeche = Column(Float)
+    Dichte = Column(Float)
+    Einwohner = Column(Integer)
 
     # up
     BR_ID = Column(Integer, ForeignKey("bundesrepublik.ID"))
-    bundesrepublik = relationship("Bundesrepublik", back_populates="bundeslaender")
+    Bundesrepublik = relationship("Bundesrepublik", back_populates="Bundeslaender")
 
     # down
-    landkreise = relationship("Landkreis", back_populates="bundesland")
-    daten = relationship(
-        "Bundesland_Daten", back_populates="bundesland"
+    Landkreise = relationship("Landkreis", back_populates="Bundesland")
+    Daten = relationship(
+        "Bundesland_Daten", back_populates="Bundesland"
     )
 
     # alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="bundesland")
@@ -100,17 +139,31 @@ class Bundesland_Daten(Base):
     ID = Column(Integer, primary_key=True, index=True)
 
     DatenstandTag = Column(Integer)
-    Datum = Column(String)
+    Datum = Column(String, index=True)
     AnzahlFall = Column(Integer)
     AnzahlFallNeu = Column(Integer)
     AnzahlTodesfall = Column(Integer)
     AnzahlTodesfallNeu = Column(Integer)
     AnzahlGenesen = Column(Integer)
     AnzahlGenesenNeu = Column(Integer)
+
+    AnzahlFallNeu_Meldung_letze_7_Tage = Column(Integer)
+    AnzahlFallNeu_Meldung_letze_14_Tage = Column(Integer)
+    MeldeDauerFallNeu_Min = Column(Integer)
+    MeldeDauerFallNeu_Max = Column(Integer)
+    MeldeDauerFallNeu_Schnitt = Column(Float)
+    MeldeDauerFallNeu_Median = Column(Float)
+    MeldeDauerFallNeu_StdAbw = Column(Float)
+    MeldeDauerFallNeu_Fallbasis = Column(Integer)
+    DatenstandTag_Max = Column(Integer)
+
     InzidenzFallNeu = Column(Float)
     InzidenzTodesfallNeu = Column(Float)
     InzidenzFall = Column(Float)
     InzidenzTodesfall = Column(Float)
+
+    Fallsterblichkeit_Prozent = Column(Float)
+
     AnzahlFallNeu_7_Tage = Column(Integer)
     AnzahlFallNeu_7_Tage_Trend = Column(Float)
     AnzahlFallNeu_7_Tage_7_Tage_davor = Column(Integer)
@@ -119,6 +172,24 @@ class Bundesland_Daten(Base):
     AnzahlTodesfallNeu_7_Tage_7_Tage_davor = Column(Integer)
     AnzahlGenesenNeu_7_Tage = Column(Integer)
     AnzahlGenesenNeu_7_Tage_Trend = Column(Float)
+
+    AnzahlFallNeu_Meldung_letze_7_Tage_7_Tage = Column(Integer)
+    AnzahlFallNeu_Meldung_letze_7_Tage_7_Tage_Trend = Column(Float)
+    AnzahlFallNeu_Meldung_letze_14_Tage_7_Tage = Column(Integer)
+    AnzahlFallNeu_Meldung_letze_14_Tage_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Min_7_Tage = Column(Integer)
+    MeldeDauerFallNeu_Min_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Max_7_Tage = Column(Integer)
+    MeldeDauerFallNeu_Max_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Schnitt_7_Tage = Column(Float)
+    MeldeDauerFallNeu_Schnitt_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Median_7_Tage = Column(Float)
+    MeldeDauerFallNeu_Median_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_StdAbw_7_Tage = Column(Float)
+    MeldeDauerFallNeu_StdAbw_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Fallbasis_7_Tage = Column(Integer)
+    MeldeDauerFallNeu_Fallbasis_7_Tage_Trend = Column(Float)
+
     InzidenzFallNeu_7_Tage = Column(Float)
     InzidenzFallNeu_7_Tage_Trend = Column(Float)
     InzidenzFallNeu_7_Tage_7_Tage_davor = Column(Float)
@@ -136,14 +207,20 @@ class Bundesland_Daten(Base):
     InzidenzTodesfallNeu_7_Tage_7_Tage_davor = Column(Float)
     InzidenzTodesfallNeu_7_Tage_Trend_Spezial = Column(Float)
 
+    DatenstandTag_Diff = Column(Integer)
+    InzidenzFallNeu_Meldung_letze_7_Tage_7_Tage = Column(Float)
+    AnzahlFallNeu_7_Tage_Dropped = Column(Integer)
+    ProzentFallNeu_7_Tage_Dropped = Column(Float)
+    MeldeDauerFallNeu_Min_Neg = Column(Integer)
+
     # up
-    bundesland_id = Column(Integer, ForeignKey("bundeslaender.ID"))
-    bundesland = relationship(
-        "Bundesland", back_populates="daten", lazy="joined"
+    Bundesland_ID = Column(Integer, ForeignKey("bundeslaender.ID"))
+    Bundesland = relationship(
+        "Bundesland", back_populates="Daten", lazy="joined"
     )
 
-    Altersgruppe_id = Column(Integer, ForeignKey("altersgruppen.id"))
-    Altersgruppe = relationship("Altersgruppe", back_populates="bundesland_faelle")
+    Altersgruppe_id = Column(Integer, ForeignKey("altersgruppen.ID"))
+    Altersgruppe = relationship("Altersgruppe", back_populates="Bundesland_faelle")
 
     # down
 
@@ -155,20 +232,20 @@ class Landkreis(Base):
     # __table_args__ = (UniqueConstraint("name", "typ", name="_lk_name_typ_uc"),)
     ID = Column(Integer, primary_key=True, index=True)
 
-    name = Column(String, nullable=False)
-    typ = Column(String, nullable=False)
-    flaeche = Column(Float)
-    dichte = Column(Float)
-    einwohner = Column(Integer)
+    Name = Column(String, nullable=False)
+    Typ = Column(String, nullable=False)
+    Flaeche = Column(Float)
+    Dichte = Column(Float)
+    Einwohner = Column(Integer)
 
     # up
     BL_ID = Column(Integer, ForeignKey("bundeslaender.ID"))
-    bundesland = relationship("Bundesland", back_populates="landkreise")
+    Bundesland = relationship("Bundesland", back_populates="Landkreise")
 
     # down
 
-    daten = relationship(
-        "Landkreis_Daten", back_populates="landkreis"
+    Daten = relationship(
+        "Landkreis_Daten", back_populates="Landkreis"
     )
 
     # alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="landkreis")
@@ -179,17 +256,31 @@ class Landkreis_Daten(Base):
     ID = Column(Integer, primary_key=True, index=True)
 
     DatenstandTag = Column(Integer)
-    Datum = Column(String)
+    Datum = Column(String, index=True)
     AnzahlFall = Column(Integer)
     AnzahlFallNeu = Column(Integer)
     AnzahlTodesfall = Column(Integer)
     AnzahlTodesfallNeu = Column(Integer)
     AnzahlGenesen = Column(Integer)
     AnzahlGenesenNeu = Column(Integer)
+
+    AnzahlFallNeu_Meldung_letze_7_Tage = Column(Integer)
+    AnzahlFallNeu_Meldung_letze_14_Tage = Column(Integer)
+    MeldeDauerFallNeu_Min = Column(Integer)
+    MeldeDauerFallNeu_Max = Column(Integer)
+    MeldeDauerFallNeu_Schnitt = Column(Float)
+    MeldeDauerFallNeu_Median = Column(Float)
+    MeldeDauerFallNeu_StdAbw = Column(Float)
+    MeldeDauerFallNeu_Fallbasis = Column(Integer)
+    DatenstandTag_Max = Column(Integer)
+
     InzidenzFallNeu = Column(Float)
     InzidenzTodesfallNeu = Column(Float)
     InzidenzFall = Column(Float)
     InzidenzTodesfall = Column(Float)
+
+    Fallsterblichkeit_Prozent = Column(Float)
+
     AnzahlFallNeu_7_Tage = Column(Integer)
     AnzahlFallNeu_7_Tage_Trend = Column(Float)
     AnzahlFallNeu_7_Tage_7_Tage_davor = Column(Integer)
@@ -198,6 +289,24 @@ class Landkreis_Daten(Base):
     AnzahlTodesfallNeu_7_Tage_7_Tage_davor = Column(Integer)
     AnzahlGenesenNeu_7_Tage = Column(Integer)
     AnzahlGenesenNeu_7_Tage_Trend = Column(Float)
+
+    AnzahlFallNeu_Meldung_letze_7_Tage_7_Tage = Column(Integer)
+    AnzahlFallNeu_Meldung_letze_7_Tage_7_Tage_Trend = Column(Float)
+    AnzahlFallNeu_Meldung_letze_14_Tage_7_Tage = Column(Integer)
+    AnzahlFallNeu_Meldung_letze_14_Tage_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Min_7_Tage = Column(Integer)
+    MeldeDauerFallNeu_Min_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Max_7_Tage = Column(Integer)
+    MeldeDauerFallNeu_Max_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Schnitt_7_Tage = Column(Float)
+    MeldeDauerFallNeu_Schnitt_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Median_7_Tage = Column(Float)
+    MeldeDauerFallNeu_Median_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_StdAbw_7_Tage = Column(Float)
+    MeldeDauerFallNeu_StdAbw_7_Tage_Trend = Column(Float)
+    MeldeDauerFallNeu_Fallbasis_7_Tage = Column(Integer)
+    MeldeDauerFallNeu_Fallbasis_7_Tage_Trend = Column(Float)
+
     InzidenzFallNeu_7_Tage = Column(Float)
     InzidenzFallNeu_7_Tage_Trend = Column(Float)
     InzidenzFallNeu_7_Tage_7_Tage_davor = Column(Float)
@@ -215,26 +324,32 @@ class Landkreis_Daten(Base):
     InzidenzTodesfallNeu_7_Tage_7_Tage_davor = Column(Float)
     InzidenzTodesfallNeu_7_Tage_Trend_Spezial = Column(Float)
 
-    # up
-    landkreis_id = Column(Integer, ForeignKey("landkreise.ID"))
-    landkreis = relationship("Landkreis", back_populates="daten")
+    DatenstandTag_Diff = Column(Integer)
+    InzidenzFallNeu_Meldung_letze_7_Tage_7_Tage = Column(Float)
+    AnzahlFallNeu_7_Tage_Dropped = Column(Integer)
+    ProzentFallNeu_7_Tage_Dropped = Column(Float)
+    MeldeDauerFallNeu_Min_Neg = Column(Integer)
 
-    Altersgruppe_id = Column(Integer, ForeignKey("altersgruppen.id"))
-    Altersgruppe = relationship("Altersgruppe", back_populates="landkreis_faelle")
+    # up
+    Landkreis_ID = Column(Integer, ForeignKey("landkreise.ID"))
+    Landkreis = relationship("Landkreis", back_populates="Daten")
+
+    Altersgruppe_ID = Column(Integer, ForeignKey("altersgruppen.ID"))
+    Altersgruppe = relationship("Altersgruppe", back_populates="Landkreis_faelle")
 
 
 class Altersgruppe(Base):
     __tablename__ = "altersgruppen"
-    id = Column(Integer, primary_key=True, index=True)
+    ID = Column(Integer, primary_key=True, index=True)
     Name = Column(String, index=True)
 
     # down
 
-    bundesland_faelle = relationship(
+    Bundesland_faelle = relationship(
         "Bundesland_Daten", back_populates="Altersgruppe"
     )
 
-    landkreis_faelle = relationship(
+    Landkreis_faelle = relationship(
         "Landkreis_Daten", back_populates="Altersgruppe"
     )
 

@@ -8,8 +8,8 @@ from .database import SessionLocal, engine
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Covid 19 API Demo",
-    description="Datenquelle: RKI COVID-19 Datenhub, https://npgeo-corona-npgeo-de.hub.arcgis.com/search?collection=Dataset/",
+    title="Covid Risk API Demo ",
+    description="Datenquelle: https://pavelmayer.de/covid/risks/ . This is a private site in test mode, data validitiy cannot be guaranteed. Hinweis: Dies ist eine privat betriebene Seite im Testbetrieb, für die Richtigkeit der Berechnung und der Ergebnisse gibt es keine Gewähr.",
 )
 
 
@@ -23,8 +23,22 @@ def get_db():
 
 
 @app.get(
-    "/api/bundeslaender/latest",  # ,
-    response_model=List[schemas.Bundesland_Daten_Taeglich_Mit_Bundesland],
+    "/api/bundeslaender",  # ,
+    response_model=List[schemas.Bundesland_Base],
 )
-def bundeslaender_letzte_daten(session: Session = Depends(get_db)):
-    return crud.get_data_for_bundeslaender(session=session, date="latest")
+async def bundeslaender_daten(session: Session = Depends(get_db)):
+    return crud.get_bundeslaender_daten(session=session)
+
+@app.get(
+    "/api/bundesland/{kuerzel}",  # ,
+    response_model=List[schemas.Bundesland_Data_Base],
+)
+async def bundesland_daten(kuerzel: str, session: Session = Depends(get_db)):
+    return crud.get_bundesland_daten(session=session, kuerzel=kuerzel)
+
+@app.get(
+    "/api/map/demo",  # ,
+    response_model=List[schemas.GeoDemo_Base],
+)
+async def geojson_demo(date: str, session: Session = Depends(get_db)):
+    return crud.get_geojson_demo(session=session, date=date)

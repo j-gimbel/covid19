@@ -19,8 +19,12 @@ def read_data_from_csv(csv_file_path: str, header: dict):
     for row in csv_reader:
         rows.append(row)
     column_names = list(header.keys())
-    if rows[0] != column_names:
-        raise Exception("Bad Header in " + csv_file_path)
+    # if rows[0] != column_names:
+    #raise Exception("Bad Header in " + csv_file_path)
+    for i in range(0, len(rows[0])):
+        if rows[0][i] != column_names[i]:
+            print("Diff "+rows[0][i] + " != " + column_names[i])
+
     header_names = rows[0]
     indexes = {}
     for col in column_names:
@@ -47,11 +51,16 @@ def read_data_from_csv(csv_file_path: str, header: dict):
 
     for row_index in range(0, len(rows)):
         row = rows[row_index]
+
         for i in indexes_to_int:
             if row[i] == "":
                 row[i] = None
             else:
-                row[i] = int(row[i])
+                try:
+                    row[i] = int(row[i])
+                except ValueError as e:
+                    print("Wrong int for: " + header_keys[i])
+
         for i in indexes_to_float:
             if row[i] == "":
                 row[i] = None
@@ -119,7 +128,11 @@ class DB:
 
     def _get_row_data(self, indexes, row):
         data = {}
-        for k in ["DatenstandTag", "Datum", "AnzahlFall", "AnzahlFallNeu", "AnzahlTodesfall", "AnzahlTodesfallNeu", "AnzahlGenesen", "AnzahlGenesenNeu", "InzidenzFallNeu", "InzidenzTodesfallNeu", "InzidenzFall", "InzidenzTodesfall", "AnzahlFallNeu_7_Tage", "AnzahlFallNeu_7_Tage_Trend", "AnzahlFallNeu_7_Tage_7_Tage_davor", "AnzahlTodesfallNeu_7_Tage", "AnzahlTodesfallNeu_7_Tage_Trend", "AnzahlTodesfallNeu_7_Tage_7_Tage_davor", "AnzahlGenesenNeu_7_Tage", "AnzahlGenesenNeu_7_Tage_Trend", "InzidenzFallNeu_7_Tage", "InzidenzFallNeu_7_Tage_Trend", "InzidenzFallNeu_7_Tage_7_Tage_davor", "InzidenzFallNeu_7_Tage_Trend_Spezial", "InzidenzFallNeu_7_Tage_R", "InzidenzFallNeu_Prognose_1_Wochen", "InzidenzFallNeu_Prognose_2_Wochen", "InzidenzFallNeu_Prognose_4_Wochen", "InzidenzFallNeu_Prognose_8_Wochen", "InzidenzFallNeu_Tage_bis_50", "InzidenzFallNeu_Tage_bis_100", "Kontaktrisiko", "InzidenzTodesfallNeu_7_Tage", "InzidenzTodesfallNeu_7_Tage_Trend", "InzidenzTodesfallNeu_7_Tage_7_Tage_davor", "InzidenzTodesfallNeu_7_Tage_Trend_Spezial"]:
+
+        # for k in ["DatenstandTag", "Datum", "AnzahlFall", "AnzahlFallNeu", "AnzahlTodesfall", "AnzahlTodesfallNeu", "AnzahlGenesen", "AnzahlGenesenNeu", "InzidenzFallNeu", "InzidenzTodesfallNeu", "InzidenzFall", "InzidenzTodesfall", "AnzahlFallNeu_7_Tage", "AnzahlFallNeu_7_Tage_Trend", "AnzahlFallNeu_7_Tage_7_Tage_davor", "AnzahlTodesfallNeu_7_Tage", "AnzahlTodesfallNeu_7_Tage_Trend", "AnzahlTodesfallNeu_7_Tage_7_Tage_davor", "AnzahlGenesenNeu_7_Tage", "AnzahlGenesenNeu_7_Tage_Trend", "InzidenzFallNeu_7_Tage", "InzidenzFallNeu_7_Tage_Trend", "InzidenzFallNeu_7_Tage_7_Tage_davor", "InzidenzFallNeu_7_Tage_Trend_Spezial", "InzidenzFallNeu_7_Tage_R", "InzidenzFallNeu_Prognose_1_Wochen", "InzidenzFallNeu_Prognose_2_Wochen", "InzidenzFallNeu_Prognose_4_Wochen", "InzidenzFallNeu_Prognose_8_Wochen", "InzidenzFallNeu_Tage_bis_50", "InzidenzFallNeu_Tage_bis_100", "Kontaktrisiko", "InzidenzTodesfallNeu_7_Tage", "InzidenzTodesfallNeu_7_Tage_Trend", "InzidenzTodesfallNeu_7_Tage_7_Tage_davor", "InzidenzTodesfallNeu_7_Tage_Trend_Spezial"]:
+        for k in list(models.Landkreis_Daten.__table__.columns.keys()):
+            if k in ["ID", "Landkreis_ID", "Altersgruppe_ID"]:
+                continue
             data[k] = row[indexes[k.replace("_", "-")]]
 
         return data
@@ -132,9 +145,9 @@ class DB:
 
             if int(row[IdLandkreis_index]) == 0:
                 if "flaeche" not in bundesrepublik:
-                    bundesrepublik["flaeche"] = row[data["indexes"]["Flaeche"]]
-                    bundesrepublik["einwohner"] = row[data["indexes"]["Einwohner"]]
-                    bundesrepublik["dichte"] = row[data["indexes"]["Dichte"]]
+                    bundesrepublik["Flaeche"] = row[data["indexes"]["Flaeche"]]
+                    bundesrepublik["Einwohner"] = row[data["indexes"]["Einwohner"]]
+                    bundesrepublik["Dichte"] = row[data["indexes"]["Dichte"]]
                 bundesrepublik["data"].append(self._get_row_data(data["indexes"], row))
         return bundesrepublik
 
@@ -143,13 +156,13 @@ class DB:
         if sa_bundesrepublik is None:
             sa_bundesrepublik = models.Bundesrepublik(
                 ID=1,
-                flaeche=bundesrepublik["flaeche"],
-                dichte=bundesrepublik["dichte"],
-                einwohner=bundesrepublik["einwohner"]
+                Flaeche=bundesrepublik["Flaeche"],
+                Dichte=bundesrepublik["Dichte"],
+                Einwohner=bundesrepublik["Einwohner"]
             )
             for d in bundesrepublik["data"]:
                 sa_bundesrepublik_data = models.Bundesrepublik_Daten(**d)
-                sa_bundesrepublik.daten.append(sa_bundesrepublik_data)
+                sa_bundesrepublik.Daten.append(sa_bundesrepublik_data)
             self.session.add(sa_bundesrepublik)
             self.session.commit()
         else:
@@ -159,6 +172,26 @@ class DB:
         LandkreisTyp_index = data["indexes"]["LandkreisTyp"]
         IdBundesland_index = data["indexes"]["IdBundesland"]
 
+        kuerzel = {
+            "Baden-Württemberg": "BW",
+            "Bayern": "BY",
+            "Berlin": "BE",
+            "Brandenburg": "BB",
+            "Bremen": "HB",
+            "Hamburg": "HH",
+            "Hessen": "HE",
+            "Mecklenburg-Vorpommern": "MV",
+            "Niedersachsen": "NI",
+            "Nordrhein-Westfalen": "NW",
+            "Rheinland-Pfalz": "RP",
+            "Saarland": "SL",
+            "Sachsen": "SN",
+            "Sachsen-Anhalt": "ST",
+            "Schleswig-Holstein": "SH",
+            "Thüringen": "TH"
+
+        }
+
         bundeslaender_by_id = {}
         for row in data["rows"]:
             if row[LandkreisTyp_index] == "BL":
@@ -166,10 +199,11 @@ class DB:
 
                 if bundesland_id not in bundeslaender_by_id:
                     bundeslaender_by_id[bundesland_id] = {
-                        "name": row[data["indexes"]["Bundesland"]],
-                        "flaeche": row[data["indexes"]["Flaeche"]],
-                        "einwohner": row[data["indexes"]["Einwohner"]],
-                        "dichte": row[data["indexes"]["Dichte"]],
+                        "Name": row[data["indexes"]["Bundesland"]],
+                        "Kuerzel": kuerzel[row[data["indexes"]["Bundesland"]]],
+                        "Flaeche": row[data["indexes"]["Flaeche"]],
+                        "Einwohner": row[data["indexes"]["Einwohner"]],
+                        "Dichte": row[data["indexes"]["Dichte"]],
                         "data": []
                     }
                 bundeslaender_by_id[bundesland_id]["data"].append(self._get_row_data(data["indexes"], row))
@@ -184,14 +218,15 @@ class DB:
                 sa_bundesland = models.Bundesland(
                     ID=bundesland_id,
                     BR_ID=1,
-                    name=bundesland["name"],
-                    flaeche=bundesland["flaeche"],
-                    dichte=bundesland["dichte"],
-                    einwohner=bundesland["einwohner"]
+                    Name=bundesland["Name"],
+                    Kuerzel=bundesland["Kuerzel"],
+                    Flaeche=bundesland["Flaeche"],
+                    Dichte=bundesland["Dichte"],
+                    Einwohner=bundesland["Einwohner"]
                 )
                 for d in bundesland["data"]:
                     sa_bundesland_data = models.Bundesland_Daten(**d)
-                    sa_bundesland.daten.append(sa_bundesland_data)
+                    sa_bundesland.Daten.append(sa_bundesland_data)
                 self.session.add(sa_bundesland)
                 self.session.commit()
             else:
@@ -206,11 +241,11 @@ class DB:
                 lk_id = int(row[IdLandkreis_index])
                 if lk_id not in landkreise_by_id:
                     landkreise_by_id[lk_id] = {
-                        "name": row[data["indexes"]["Landkreis"]],
-                        "typ": row[data["indexes"]["LandkreisTyp"]],
-                        "flaeche": row[data["indexes"]["Flaeche"]],
-                        "einwohner": row[data["indexes"]["Einwohner"]],
-                        "dichte": row[data["indexes"]["Dichte"]],
+                        "Name": row[data["indexes"]["Landkreis"]],
+                        "Typ": row[data["indexes"]["LandkreisTyp"]],
+                        "Flaeche": row[data["indexes"]["Flaeche"]],
+                        "Einwohner": row[data["indexes"]["Einwohner"]],
+                        "Dichte": row[data["indexes"]["Dichte"]],
                         "BL_ID": row[data["indexes"]["IdBundesland"]],
                         "data": []
                     }
@@ -227,15 +262,15 @@ class DB:
                 sa_landkreis = models.Landkreis(
                     ID=lk_id,
                     BL_ID=landkreis["BL_ID"],
-                    name=landkreis["name"],
-                    typ=landkreis["typ"],
-                    flaeche=landkreis["flaeche"],
-                    dichte=landkreis["dichte"],
-                    einwohner=landkreis["einwohner"]
+                    Name=landkreis["Name"],
+                    Typ=landkreis["Typ"],
+                    Flaeche=landkreis["Flaeche"],
+                    Dichte=landkreis["Dichte"],
+                    Einwohner=landkreis["Einwohner"]
                 )
                 for d in landkreis["data"]:
                     sa_landkreis_data = models.Landkreis_Daten(**d)
-                    sa_landkreis.daten.append(sa_landkreis_data)
+                    sa_landkreis.Daten.append(sa_landkreis_data)
                 self.session.add(sa_landkreis)
 
             else:
@@ -278,12 +313,26 @@ class DB:
                 "AnzahlTodesfallNeu": "int",
                 "AnzahlGenesen": "int",
                 "AnzahlGenesenNeu": "int",
+
+                "AnzahlFallNeu-Meldung-letze-7-Tage": "int",
+                "AnzahlFallNeu-Meldung-letze-14-Tage": "int",
+                "MeldeDauerFallNeu-Min": "int",
+                "MeldeDauerFallNeu-Max": "int",
+                "MeldeDauerFallNeu-Schnitt": "float",
+                "MeldeDauerFallNeu-Median": "float",
+                "MeldeDauerFallNeu-StdAbw": "float",
+                "MeldeDauerFallNeu-Fallbasis": "int",
+                "DatenstandTag-Max": "int",
+
                 "Einwohner": "int",
                 "Dichte": "float",
                 "InzidenzFallNeu": "float",
                 "InzidenzTodesfallNeu": "float",
                 "InzidenzFall": "float",
                 "InzidenzTodesfall": "float",
+
+                "Fallsterblichkeit-Prozent": "float",
+
                 "AnzahlFallNeu-7-Tage": "int",
                 "AnzahlFallNeu-7-Tage-Trend": "float",
                 "AnzahlFallNeu-7-Tage-7-Tage-davor": "int",
@@ -292,6 +341,24 @@ class DB:
                 "AnzahlTodesfallNeu-7-Tage-7-Tage-davor": "int",
                 "AnzahlGenesenNeu-7-Tage": "int",
                 "AnzahlGenesenNeu-7-Tage-Trend": "float",
+
+                "AnzahlFallNeu-Meldung-letze-7-Tage-7-Tage": "int",
+                "AnzahlFallNeu-Meldung-letze-7-Tage-7-Tage-Trend": "float",
+                "AnzahlFallNeu-Meldung-letze-14-Tage-7-Tage": "int",
+                "AnzahlFallNeu-Meldung-letze-14-Tage-7-Tage-Trend": "float",
+                "MeldeDauerFallNeu-Min-7-Tage": "int",
+                "MeldeDauerFallNeu-Min-7-Tage-Trend": "float",
+                "MeldeDauerFallNeu-Max-7-Tage": "int",
+                "MeldeDauerFallNeu-Max-7-Tage-Trend": "float",
+                "MeldeDauerFallNeu-Schnitt-7-Tage": "float",
+                "MeldeDauerFallNeu-Schnitt-7-Tage-Trend": "float",
+                "MeldeDauerFallNeu-Median-7-Tage": "float",
+                "MeldeDauerFallNeu-Median-7-Tage-Trend": "float",
+                "MeldeDauerFallNeu-StdAbw-7-Tage": "float",
+                "MeldeDauerFallNeu-StdAbw-7-Tage-Trend": "float",
+                "MeldeDauerFallNeu-Fallbasis-7-Tage": "int",
+                "MeldeDauerFallNeu-Fallbasis-7-Tage-Trend": "float",
+
                 "InzidenzFallNeu-7-Tage": "float",
                 "InzidenzFallNeu-7-Tage-Trend": "float",
                 "InzidenzFallNeu-7-Tage-7-Tage-davor": "float",
@@ -307,7 +374,13 @@ class DB:
                 "InzidenzTodesfallNeu-7-Tage": "float",
                 "InzidenzTodesfallNeu-7-Tage-Trend": "float",
                 "InzidenzTodesfallNeu-7-Tage-7-Tage-davor": "float",
-                "InzidenzTodesfallNeu-7-Tage-Trend-Spezial": "float"
+                "InzidenzTodesfallNeu-7-Tage-Trend-Spezial": "float",
+
+                "DatenstandTag-Diff": "int",
+                "InzidenzFallNeu-Meldung-letze-7-Tage-7-Tage": "float",
+                "AnzahlFallNeu-7-Tage-Dropped": "int",
+                "ProzentFallNeu-7-Tage-Dropped": "float",
+                "MeldeDauerFallNeu-Min-Neg": "int"
             })
 
         #data = self._get_data(with_agegroups, data)
