@@ -90,9 +90,8 @@ class Bundesland(Base):
     daten = relationship(
         "Bundesland_Daten", back_populates="bundesland"
     )
-    Bevoelkerung = Column(Integer, nullable=False)
 
-    alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="bundesland")
+    # alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="bundesland")
 
 
 class Bundesland_Daten(Base):
@@ -148,9 +147,7 @@ class Bundesland_Daten(Base):
 
     # down
 
-    Zugehoerige_faelle = relationship(
-        "Fall_Daten_Taeglich", back_populates="bundesland_meldedatum"
-    )
+    # Zugehoerige_faelle = relationship("Fall_Daten_Taeglich", back_populates="bundesland_meldedatum")
 
 
 class Landkreis(Base):
@@ -174,7 +171,7 @@ class Landkreis(Base):
         "Landkreis_Daten", back_populates="landkreis"
     )
 
-    alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="landkreis")
+    # alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="landkreis")
 
 
 class Landkreis_Daten(Base):
@@ -241,9 +238,10 @@ class Altersgruppe(Base):
         "Landkreis_Daten", back_populates="Altersgruppe"
     )
 
-    alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="Altersgruppe")
+    #alle_faelle = relationship("Fall_Daten_Taeglich", back_populates="Altersgruppe")
 
 
+"""
 class Fall_Daten_Taeglich(Base):
     __tablename__ = "faelle_daten_taeglich"
     # __table_args__ = (UniqueConstraint("name", "typ", name="_lk_name_typ_uc"),)
@@ -255,36 +253,12 @@ class Fall_Daten_Taeglich(Base):
     AnzahlTodesfall = Column(Integer, nullable=False)
     AnzahlGenesen = Column(Integer, nullable=False)
 
-    # Pavel
-    """
-    caseHash = Column(BigInteger)
-    msgHash = Column(BigInteger)
-    refDay = Column(Integer)
-    meldeDay = Column(Integer)
-    neuerFallKlar = Column(String)  # neuerFallGesternUndHeute / neuerFallNurHeute
-    newBeforeDay = Column(Integer)
-    newCaseBeforeDay = Column(Integer)
-    anzahlFallLfd = Column(Integer)  # summe der Fälle
-    anzahlTodesFallLfd = Column(Integer)  # summe der Fälle
-
-    faellePro100k = Column(Float)  # kannn man dass nicht berechnen ?
-    isStadt = Column(Boolean)  # 0/1
-    erkDay = Column(Integer)
-    newCaseOnDay = Column(Integer)
-    newOnDay = Column(Integer)
-    caseDelay = Column(Integer)
-    NeuerTodesfallKlar = Column(String)  # neuerTodesfallGesternUndHeute /
-    newDeathBeforeDay = Column(Integer)
-    newDeathOnDay = Column(Integer)
-    deathDelay = Column(Integer)
-    missingSinceDay = Column(Integer)
-    missingCasesInOldRecord = Column(Integer)
-    poppedUpOnDay = Column(Integer)
-    """
+    
     # up
     Altersgruppe_id = Column(Integer, ForeignKey("altersgruppen.id"))
     Altersgruppe = relationship("Altersgruppe", back_populates="alle_faelle")
 
+  
     landkreis_id = Column(Integer, ForeignKey("landkreise.ID"))
     landkreis = relationship("Landkreis", back_populates="alle_faelle")
 
@@ -297,6 +271,7 @@ class Fall_Daten_Taeglich(Base):
     bundesland_meldedatum = relationship(
         "Bundesland_Daten", back_populates="Zugehoerige_faelle"
     )
+"""
 
 
 class Inserted_csv_File(Base):
