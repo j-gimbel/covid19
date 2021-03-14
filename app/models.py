@@ -83,7 +83,7 @@ class Bundesland(Base):
 
     # up
     BR_ID = Column(Integer, ForeignKey("bundesrepublik.ID"))
-    bundesland = relationship("Bundesland", back_populates="bundeslaender")
+    bundesrepublik = relationship("Bundesrepublik", back_populates="bundeslaender")
 
     # down
     landkreise = relationship("Landkreis", back_populates="bundesland")
