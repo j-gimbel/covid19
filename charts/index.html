@@ -1,0 +1,138 @@
+<!doctype html>
+<html style="font-family: 'Helvetica','Arial', Sans-Serif;">
+
+<head>
+    <title>Covid 19 Numbers Germany</title>
+    <link href="c3.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+    <script src="c3.min.js"></script>
+    <style>
+        .c3-axis-y text {
+            font-size: 15px;
+        }
+
+        .c3-axis-y2 text {
+            font-size: 15px;
+        }
+
+        .c3-axis-x text {
+            font-size: 15px;
+        }
+
+        .c3-legend-item {
+            font-size: 15px;
+        }
+
+
+        .c3-line {
+            stroke-width: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>
+        <span>Covid 19 Numbers Germany </span>
+        (<span id="datum"></span>)
+    </h2>
+    <div id="container" style="width:90vw;height:80vh">
+        <div id="chart"></div>
+    </div>
+    <div>
+        Zoomen mit click+drag, zurück mit Doppelklick.
+    </div>
+
+
+    <script type="text/javascript">
+
+        const datum = new Intl.DateTimeFormat('de').format(new Date());
+        document.querySelector('#datum').innerText = datum
+        document.addEventListener("DOMContentLoaded", function (event) {
+            console.log("DOM fully loaded and parsed");
+
+
+            fetch('http://localhost:8000/api/covidnumbers')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+
+                    bb = document.querySelector('#container').getBoundingClientRect();
+
+
+
+                    var chart = c3.generate({
+
+                        size: {
+                            height: bb.height,
+                            width: bb.width
+                        },
+                        data: {
+                            x: 'x',
+                            columns: data,
+                            axes: {
+                                'Neue Fälle': 'y',
+                                "Neue Fälle (7 Tage D.)": 'y',
+                                'Neue Todesfälle (7 Tage D.)': 'y',
+                                'Wöchentl. Tests': 'y',
+                                '7-Tage-R-Wert': 'y2'
+
+                            },
+                        }
+                        ,
+                        axis: {
+                            x: {
+                                type: 'timeseries',
+                                tick: {
+                                    format: '%Y-%m-%d',
+                                    culling: {
+                                        max: 15
+                                    },
+                                    fit: false
+                                },
+                                label: "Datum"
+                            },
+                            y: {
+                                label: "Anzahl"
+                            },
+                            y2: {
+                                show: true,
+                                label: "R-Wert"
+                            }
+                        },
+
+                        zoom: {
+                            enabled: true,
+                            rescale: true,
+
+                            type: 'drag'
+                        },
+                        point: {
+                            show: false
+                        },
+                        grid: {
+                            x: {
+                                show: true
+                            },
+                            y: {
+                                show: true
+                            }
+                        }
+                    });
+
+
+
+                });
+        });
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

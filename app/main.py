@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
@@ -12,6 +13,8 @@ app = FastAPI(
     title="Covid Risk API Demo ",
     description="Datenquelle: https://pavelmayer.de/covid/risks/ . This is a private site in test mode, data validitiy cannot be guaranteed. Hinweis: Dies ist eine privat betriebene Seite im Testbetrieb, für die Richtigkeit der Berechnung und der Ergebnisse gibt es keine Gewähr.",
 )
+
+app.mount("/charts", StaticFiles(directory="charts", html=True), name="charts")
 
 
 app.add_middleware(
@@ -51,3 +54,10 @@ async def bundesland_daten(kuerzel: str, session: Session = Depends(get_db)):
 )
 async def geojson_demo(date: str, session: Session = Depends(get_db)):
     return crud.get_geojson_demo(session=session, date=date)
+
+@app.get(
+    "/api/covidnumbers",  # ,
+    # response_model=List[schemas.GeoDemo_Base],
+)
+async def covidnumbers(session: Session = Depends(get_db)):
+    return crud.get_covidnumbers(session=session)

@@ -29,7 +29,7 @@ class Bundesrepublik_Daten(Base):
     ID = Column(Integer, primary_key=True, index=True)
 
     DatenstandTag = Column(Integer)
-    Datum = Column(String)
+    Datum = Column(String, index=True)
     AnzahlFall = Column(Integer)
     AnzahlFallNeu = Column(Integer)
     AnzahlTodesfall = Column(Integer)

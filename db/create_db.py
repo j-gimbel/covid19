@@ -29,3 +29,6 @@ if __name__ == "__main__":
     db.create(args.agegroups, args.all_series_csv_filepath)
     # except Exception as e:
     #    print(e)
+
+    #
+    # https://www.rki.de/DE/Content/InfAZ/N/Neuartiges_Coronavirus/Daten/Testzahlen-gesamt.xlsx?__blob=publicationFile
