@@ -9,11 +9,11 @@
     <script src="c3.min.js"></script>
     <style>
         .c3-axis-y text {
-            font-size: 15px;
+            font-size: 12px;
         }
 
         .c3-axis-y2 text {
-            font-size: 15px;
+            font-size: 12px;
         }
 
         .c3-axis-x text {
@@ -36,20 +36,31 @@
         <span>Covid 19 Numbers Germany </span>
         (<span id="datum"></span>)
     </h2>
-    <div id="container" style="width:90vw;height:80vh">
+    Hinweis: Durch Drücken einer beliebigen Taste kann man den Zoom-Mode hin-und-her wechseln. Standard ist
+    via Mausrad, und man hat ein Tooltip. Alternativ geht es mit click+drag (dort leider ohne Tooltip, ist ein Bug des
+    Frameworks). Zurück auf default mit einmaligem Mausklick. Klick auf die Legende blendet Serien ein/aus.
+
+    <div id="container" style="width:90vw;height:80vh;margin-top:10px">
         <div id="chart"></div>
     </div>
-    <div>
-        Zoomen mit click+drag, zurück mit Doppelklick.
-    </div>
+
 
 
     <script type="text/javascript">
 
         const datum = new Intl.DateTimeFormat('de').format(new Date());
+
+        var chart = null
+        var zoomMode = "scroll"
+        var zoomDomain = null
+
+
+
+
         document.querySelector('#datum').innerText = datum
         document.addEventListener("DOMContentLoaded", function (event) {
             console.log("DOM fully loaded and parsed");
+
 
 
             fetch('http://localhost:8000/api/covidnumbers')
@@ -58,10 +69,7 @@
                     console.log(data);
 
                     bb = document.querySelector('#container').getBoundingClientRect();
-
-
-
-                    var chart = c3.generate({
+                    var chartSettings = {
 
                         size: {
                             height: bb.height,
@@ -104,8 +112,11 @@
                         zoom: {
                             enabled: true,
                             rescale: true,
+                            onzoomend: d => {
+                                zoomDomain = d
+                                console.log(d)
+                            }
 
-                            type: 'drag'
                         },
                         point: {
                             show: false
@@ -117,8 +128,34 @@
                             y: {
                                 show: true
                             }
+                        },
+                        transition: {
+                            duration: 0
                         }
-                    });
+                    }
+
+
+
+
+                    document.addEventListener("keydown", (e) => {
+
+                        chart.destroy()
+                        console.log(zoomMode)
+                        if (zoomMode == "scroll") {
+                            zoomMode = "drag"
+                        } else {
+                            zoomMode = "scroll"
+                        }
+                        chartSettings.zoom.type = zoomMode
+                        chart = c3.generate(chartSettings);
+                        if (zoomDomain != null) {
+                            chart.zoom(zoomDomain)
+                        }
+
+
+                    })
+
+                    chart = c3.generate(chartSettings);
 
 
 
