@@ -27,6 +27,7 @@ class Bundesland_Data_Base(BaseModel):
 
 class Landkreise_Base(BaseModel):
     Name: str
+    Typ: str
     Einwohner: int
     Flaeche: float
     Dichte: float
