@@ -30,6 +30,34 @@ def get_bundesland_daten(session: Session, kuerzel: str):
     rows = session.query(models.Bundesland_Daten).filter_by(Bundesland_ID=sa_bundesland.ID).all()
     return rows
 
+
+def get_landkreise(session: Session):
+    """
+    result = (
+        session.query(models.Landkreis_Daten_Taeglich)
+        .join(models.Landkreis_Daten_Taeglich.bundesland_id)
+        .distinct()
+        .order_by(models.Landkreis_Daten_Taeglich.Aktualisierung)
+        .all()
+    )"""
+
+    return session.query(models.Landkreis).all()
+
+
+def get_landkreis_daten(session: Session, name: str):
+    """
+    result = (
+        session.query(models.Lankreis_Daten_Taeglich)
+        .join(models.Lankreis_Daten_Taeglich.Landkreis_id)
+        .distinct()
+        .order_by(models.Landkreis_Daten_Taeglich.Aktualisierung)
+        .all()
+    )"""
+    sa_landkreis = session.query(models.Landkreis).filter_by(Name=name).one()
+    rows = session.query(models.Landkreis_Daten).filter_by(Landkreis_ID=sa_landkreis.ID).all()
+    return rows
+
+
 def get_geojson_demo(session: Session, date: str):
 
     # lks = session.query(models.Landkreis).all()

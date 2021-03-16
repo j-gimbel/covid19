@@ -49,6 +49,20 @@ async def bundesland_daten(kuerzel: str, session: Session = Depends(get_db)):
     return crud.get_bundesland_daten(session=session, kuerzel=kuerzel)
 
 @app.get(
+    "/api/landkreise/",
+    response_model=List[schemas.Landkreise_Base],
+)
+async def get_lankreis_daten(session: Session = Depends(get_db)):
+    return crud.get_landkreise(session=session)
+
+@app.get(
+    "/api/landkreis/{name}",
+    response_model=List[schemas.Lankreis_Data_Base],
+)
+async def get_lankreis_daten(name: str, session: Session = Depends(get_db)):
+    return crud.get_landkreis_daten(session=session, name=name)
+
+@app.get(
     "/api/map/demo",  # ,
     response_model=List[schemas.GeoDemo_Base],
 )
