@@ -68,6 +68,21 @@ def get_geojson_demo(session: Session, date: str):
     return data
 
 
+def get_all_regions_in_db(session: Session):
+
+    bl_rows = session.query(models.Bundesland).with_entities(models.Bundesland.ID, models.Bundesland.Name, models.Bundesland.Kuerzel).all()
+    lk_rows = session.query(models.Landkreis).with_entities(models.Landkreis.ID, models.Landkreis.Name, models.Landkreis.Typ).all()
+
+    data = {'bl': [], 'lk': []}
+
+    for row in bl_rows:
+        data["bl"].append([row.ID, row.Kuerzel, row.Name])
+    for row in lk_rows:
+        data["lk"].append([row.ID, row.Name, row.Typ])
+
+    return data
+
+
 def get_covidnumbers(session: Session):
 
     rows = session.query(models.Bundesrepublik_Daten).with_entities(
@@ -142,14 +157,14 @@ def get_covidnumbers(session: Session):
         ["Neue Fälle (7 Tage D.)"],
         ['Neue Todesfälle (7 Tage D.)'],
         ['Wöchentl. Tests'],
-        ['7-Tage-R-Wert']
+        ['7-Tage-R-Wert'],
+        ['Positive Testrate']
     ]
 
     for row in rows:
 
         mydate = date.fromisoformat(row.Datum)
         cw = int(mydate.strftime("%U"))
-
         y = int(mydate.strftime("%Y"))
         if y == 2020:
             cw = cw+1
@@ -159,20 +174,158 @@ def get_covidnumbers(session: Session):
         if cw == 0:
             cw = 53
             y = y-1
-        print(str(mydate)+" - "+str(cw)+"/"+str(y))
-
         data[0].append(row.Datum)
-
         data[1].append(row.AnzahlFallNeu)
         data[2].append(row.AnzahlFallNeu_7_Tage)
         data[3].append(row.AnzahlTodesfallNeu_7_Tage)
         if str(cw)+"/"+str(y) in tests:
             data[4].append(tests[str(cw) + "/" + str(y)][0])
+
         else:
-            print("not in: "+str(cw)+"/"+str(y))
             data[4].append(None)
+
         data[5].append(row.AnzahlFallNeu_7_Tage_Trend)
 
+    return data
+
+def get_covidnumbers_new(session: Session, params: dict):
+    print(params)
+    example = {
+        'region_ids': {
+            'bl': ['11'],
+            'lk': []
+        },
+        'cases': ['current', 'dead', 'recovered'],
+        'compare_to_germany': True,
+        'modus': 'sum_up_cases'
+    }
+
+    bo_current = False
+    if 'current' in params['cases']:
+        bo_current = True
+    bo_dead = False
+    if 'dead' in params['cases']:
+        bo_dead = True
+    bo_recovered = False
+    if 'recovered' in params['cases']:
+        bo_recovered = True
+
+    bo_sum = False
+    if params['modus'] == "sum_up_cases":
+        bo_sum = True
+    bl_ids = params["region_ids"]['bl']
+    lk_ids = params["region_ids"]['lk']
+    print(bl_ids)
+
+    data = {'bl': [], 'lk': []}
+
+    if len(bl_ids) > 0:
+        for id in bl_ids:
+            id = int(id)
+            sa_bl = session.query(models.Bundesland).filter_by(ID=id).one()
+
+            bl = {}
+
+            if bo_current and 'current' not in bl:
+                bl['current'] = {'x': [], 'y': [], 'name': sa_bl.Name + ", current cases"}
+            if bo_dead and 'dead' not in bl:
+                bl['dead'] = {'x': [], 'y': [], 'name': sa_bl.Name + ", dead cases"}
+            if bo_recovered and 'recovered' not in bl:
+                bl['recovered'] = {'x': [], 'y': [], 'name': sa_bl.Name+", recovered cases"}
+
+            if not bo_sum:
+                bl_data_rows = session.query(models.Bundesland_Daten).filter_by(Bundesland_ID=id).with_entities(
+                    # models.Bundesland,
+                    models.Bundesland_Daten.Datum,
+                    models.Bundesland_Daten.AnzahlFallNeu,
+                    models.Bundesland_Daten.AnzahlTodesfallNeu,
+                    models.Bundesland_Daten.AnzahlGenesenNeu,
+                    models.Bundesland_Daten.Bundesland_ID,).order_by(models.Bundesland_Daten.Datum).all()
+
+            else:
+                bl_data_rows = session.query(models.Bundesland_Daten).filter_by(Bundesland_ID=id).with_entities(
+                    # models.Bundesland,
+                    models.Bundesland_Daten.Datum,
+                    models.Bundesland_Daten.AnzahlFall,
+                    models.Bundesland_Daten.AnzahlTodesfall,
+                    models.Bundesland_Daten.AnzahlGenesen,
+                    models.Bundesland_Daten.Bundesland_ID,).order_by(models.Bundesland_Daten.Datum).all()
+
+            for row in bl_data_rows:
+                # print(row.ID)
+
+                if bo_current:
+                    bl['current']['x'].append(row.Datum)
+                    if not bo_sum:
+                        bl['current']['y'].append(row.AnzahlFallNeu)
+                    else:
+                        bl['current']['y'].append(row.AnzahlFall)
+                if bo_dead:
+                    bl['dead']['x'].append(row.Datum)
+                    if not bo_sum:
+                        bl['dead']['y'].append(row.AnzahlTodesfallNeu)
+                    else:
+                        bl['dead']['y'].append(row.AnzahlTodesfall)
+                if bo_recovered:
+                    bl['recovered']['x'].append(row.Datum)
+                    if not bo_sum:
+                        bl['recovered']['y'].append(row.AnzahlGenesenNeu)
+                    else:
+                        bl['recovered']['y'].append(row.AnzahlGenesen)
+            data["bl"].append(bl)
+
+    if len(lk_ids) > 0:
+        for id in lk_ids:
+            id = int(id)
+            sa_lk = session.query(models.Landkreis).filter_by(ID=id).one()
+
+            lk = {}
+
+            if bo_current and 'current' not in lk:
+                lk['current'] = {'x': [], 'y': [], 'name': sa_lk.Name + ", current cases"}
+            if bo_dead and 'dead' not in lk:
+                lk['dead'] = {'x': [], 'y': [], 'name': sa_lk.Name + ", dead cases"}
+            if bo_recovered and 'recovered' not in lk:
+                lk['recovered'] = {'x': [], 'y': [], 'name': sa_lk.Name+", recovered cases"}
+
+            if not bo_sum:
+                lk_data_rows = session.query(models.Landkreis_Daten).filter_by(Landkreis_ID=id).with_entities(
+
+                    models.Landkreis_Daten.Datum,
+                    models.Landkreis_Daten.AnzahlFallNeu,
+                    models.Landkreis_Daten.AnzahlTodesfallNeu,
+                    models.Landkreis_Daten.AnzahlGenesenNeu,
+                    models.Landkreis_Daten.Landkreis_ID).order_by(models.Landkreis_Daten.Datum).all()
+            else:
+                lk_data_rows = session.query(models.Landkreis_Daten).filter_by(Landkreis_ID=id).with_entities(
+
+                    models.Landkreis_Daten.Datum,
+                    models.Landkreis_Daten.AnzahlFall,
+                    models.Landkreis_Daten.AnzahlTodesfall,
+                    models.Landkreis_Daten.AnzahlGenesen,
+                    models.Landkreis_Daten.Landkreis_ID).order_by(models.Landkreis_Daten.Datum).all()
+
+            for row in lk_data_rows:
+
+                if bo_current:
+                    lk['current']['x'].append(row.Datum)
+                    if not bo_sum:
+                        lk['current']['y'].append(row.AnzahlFallNeu)
+                    else:
+                        lk['current']['y'].append(row.AnzahlFall)
+                if bo_dead:
+                    lk['dead']['x'].append(row.Datum)
+                    if not bo_sum:
+                        lk['dead']['y'].append(row.AnzahlTodesfallNeu)
+                    else:
+                        lk['dead']['y'].append(row.AnzahlTodesfall)
+                if bo_recovered:
+                    lk['recovered']['x'].append(row.Datum)
+                    if not bo_sum:
+                        lk['recovered']['y'].append(row.AnzahlGenesenNeu)
+                    else:
+                        lk['recovered']['y'].append(row.AnzahlGenesen)
+            data["lk"].append(lk)
     return data
 
 

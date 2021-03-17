@@ -232,7 +232,7 @@ class Landkreis(Base):
     # __table_args__ = (UniqueConstraint("name", "typ", name="_lk_name_typ_uc"),)
     ID = Column(Integer, primary_key=True, index=True)
 
-    Name = Column(String, nullable=False)
+    Name = Column(String, nullable=False, index=True)
     Typ = Column(String, nullable=False)
     Flaeche = Column(Float)
     Dichte = Column(Float)

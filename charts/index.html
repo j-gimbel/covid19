@@ -1,12 +1,23 @@
 <!doctype html>
-<html style="font-family: 'Helvetica','Arial', Sans-Serif;">
+<html style="font-family: 'Helvetica','Arial', Sans-Serif;height:100%;min-height:100%">
 
 <head>
     <title>Covid 19 Numbers Germany</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!--
     <link href="c3.css" rel="stylesheet">
     <script src="https://d3js.org/d3.v5.min.js"></script>
-
     <script src="c3.min.js"></script>
+
     <style>
         .c3-axis-y text {
             font-size: 12px;
@@ -28,139 +39,448 @@
         .c3-line {
             stroke-width: 2px;
         }
+     </style>
+
+-->
+    <style>
+        .region {
+            cursor: pointer;
+        }
+
+        .region.selected {
+            background-color: #0b5ed7;
+            color: #fff;
+        }
     </style>
 </head>
 
-<body>
-    <h2>
-        <span>Covid 19 Numbers Germany </span>
-        (<span id="datum"></span>)
-    </h2>
-    Hinweis: Durch Drücken einer beliebigen Taste kann man den Zoom-Mode hin-und-her wechseln. Standard ist
-    via Mausrad, und man hat ein Tooltip. Alternativ geht es mit click+drag (dort leider ohne Tooltip, ist ein Bug des
-    Frameworks). Zurück auf default mit einmaligem Mausklick. Klick auf die Legende blendet Serien ein/aus.
+<body style="height:100%;min-height:100%">
+    <!-- As a heading -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Covid 19 Data</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Open Settings</button>
+            </div>
+        </div>
+    </nav>
 
-    <div id="container" style="width:90vw;height:60vh;margin-top:10px">
-        <div id="chart"></div>
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col-sm-12 col-11">
+                <div id="chart" style="height:80vh"></div>
+
+            </div>
+        </div>
+
     </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
 
+                    <div class="card">
+                        <div class="card-header">Regions</div>
+                        <div class="card-body">
+                            <div class="card-text">
+
+                                <div class="card">
+                                    <div class="card-header">Selected</div>
+                                    <div id="region_selected" class="card-text py-2" style="min-height:48px">
+                                    </div>
+                                </div>
+
+                                <input id="region_search" type="text" class="form-control"
+                                    placeholder="...enter text to filter region list (e.g. Hessen / Berlin)"
+                                    aria-label="region_search" aria-describedby="region_search">
+                                <div id="regions" class="px-2 pt-1 border border-rounded rounded"
+                                    style="max-height:12em;overflow-y:scroll">
+                                </div>
+                                <button id="clear_regions" type="button" class="mt-2 btn btn-secondary">Clear</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="basic-url" class="form-label">What to show ?</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="check_current_cases" checked>
+                                        <label class="form-check-label" for="check_current_cases">
+                                            cases
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="check_dead_cases"
+                                            checked>
+                                        <label class="form-check-label" for="check_dead_cases">
+                                            deaths
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="check_recovered_cases" checked>
+                                        <label class="form-check-label" for="check_recovered_cases">
+                                            recovered
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <div class="col">
+                                    <label for="Modus" class="form-label">Modus</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="case_modus"
+                                            value="sum_up_cases">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            sum up cases
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="case_modus" checked
+                                            value="new_cases">
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            new cases
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="compare_to_germany"
+                                            checked>
+                                        <label class="form-check-label" for="compare_germany">
+                                            compare to germany
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
 
     <script type="text/javascript">
 
-        const datum = new Intl.DateTimeFormat('de').format(new Date());
+        //var base_url = "http://127.0.0.1:8000"
+        var base_url = "http://j-gimbel.ddns.net:8000"
 
+        // Returns a function, that, as long as it continues to be invoked, will not
+        // be triggered. The function will be called after it stops being called for
+        // N milliseconds. If `immediate` is passed, trigger the function on the
+        // leading edge, instead of the trailing.
+        function debounce(func, wait, immediate) {
+            var timeout;
+            return function () {
+                var context = this, args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        };
+
+        document.querySelector('#clear_regions').addEventListener('click', (e) => {
+            for (el of document.querySelectorAll('.region-button')) {
+                el.remove()
+            }
+            for (el of document.querySelectorAll('.region.selected')) {
+                el.classList.remove('selected')
+            }
+        })
+
+        // query new API data when modal closes
+        var myModalEl = document.getElementById('myModal')
+        myModalEl.addEventListener('hide.bs.modal', function (event) {
+
+
+            params = {
+                'region_ids': {
+                    'bl': [],
+                    'lk': []
+                },
+                'cases': [],
+                'compare_to_germany': false,
+                'modus': 'new_cases'
+            }
+
+            if (document.querySelector('#check_current_cases').checked) params.cases.push('current')
+            if (document.querySelector('#check_dead_cases').checked) params.cases.push('dead')
+            if (document.querySelector('#check_recovered_cases').checked) params.cases.push('recovered')
+            params.compare_to_germany = document.querySelector('#compare_to_germany').checked
+            region_elements = document.querySelectorAll('.region.selected');
+            for (r of region_elements) {
+                if (r.dataset.t == "bl") {
+                    params.region_ids.bl.push(r.dataset.id)
+                }
+                if (r.dataset.t == "lk") {
+                    params.region_ids.lk.push(r.dataset.id)
+                }
+            }
+
+            var radios = document.getElementsByName('case_modus');
+            for (r of radios) {
+                if (r.checked) params.modus = r.value
+            }
+
+            usp = new URLSearchParams();
+            usp.append('p', JSON.stringify(params))
+            fetch(base_url + '/api/covidnumbers?' + usp.toString())
+                .then(response => response.json())
+                .then(response => {
+                    console.log("response", response);
+                    var data = [];
+                    for (bldata of response["bl"]) {
+                        for (key of Object.keys(bldata)) {
+                            trace = bldata[key]
+                            trace.type = "scatter"
+                            data.push(trace)
+                        }
+                    }
+                    for (lkdata of response["lk"]) {
+                        for (key of Object.keys(lkdata)) {
+                            trace = lkdata[key]
+                            trace.type = "scatter"
+                            data.push(trace)
+                        }
+                    }
+                    var layout = {
+                        //title: 'Double Y Axis Example',
+                        yaxis: { title: (params['modus'] == "sum_up_cases" ? 'sum of cases' : 'cases') },
+                        yaxis2: {
+                            title: 'yaxis2 title',
+                            titlefont: { color: 'rgb(148, 103, 189)' },
+                            tickfont: { color: 'rgb(148, 103, 189)' },
+                            overlaying: 'y',
+                            side: 'right'
+                        },
+                        autosize: true,
+                        margin: {
+                            l: 40,
+                            r: 40,
+                            t: 30,
+                            b: 30,
+
+                        }
+                    };
+
+                    var config = { responsive: true }
+                    Plotly.newPlot('chart', data, layout, config);
+                })
+        })
+
+
+        function addSelected(t) {
+            id = t.dataset.t + t.dataset.id
+            let el = document.createElement("button");
+            el.id = id
+            el.classList.add('region-button', 'btn-primary', 'btn-sm', 'mx-1', 'mt-1');
+            el.innerText = t.textContent
+            let parent = document.querySelector('#region_selected')
+            parent.appendChild(el)
+            el.addEventListener('click', (e) => {
+                elregion = document.querySelector('.region[data-t="' + t.dataset.t + '"][data-id="' + t.dataset.id + '"]')
+                console.log(elregion)
+                elregion.classList.remove('selected')
+                e.target.remove()
+            }, true)
+
+        }
+
+        function removeSelected(t) {
+            console.log(t)
+            id = t.dataset.t + t.dataset.id
+            console.log(id)
+            document.querySelector('#' + id).remove()
+
+
+        }
+
+        var debouncedSearch = debounce(function (e) {
+
+            t = e.target.value
+
+            elements = document.querySelectorAll('.region')
+            for (e of elements) {
+
+                if (e.dataset.t == "bl") {
+                    if (t.toLowerCase() != e.textContent.substring(0, t.length).toLowerCase()) {
+                        e.classList.add('d-none')
+                    }
+                    else {
+                        e.classList.remove('d-none')
+                    }
+                }
+
+                else if (e.dataset.t == "lk") {
+
+                    if (e.dataset.t2 == "LSK") {
+                        console.log("LSK")
+                        console.log(e.textContent.toLowerCase(), t.toLowerCase())
+                        if (e.textContent.toLowerCase().indexOf(t.toLowerCase()) > -1) {
+                            e.classList.remove('d-none')
+                        }
+                        else {
+                            e.classList.add('d-none')
+                        }
+                    } else {
+                        if (t.toLowerCase() != e.textContent.substring(3, 3 + t.length).toLowerCase()) {
+                            e.classList.add('d-none')
+                        }
+
+                        else {
+                            e.classList.remove('d-none')
+                        }
+                    }
+                }
+
+            }
+        }, 250)
+
+
+        //const datum = new Intl.DateTimeFormat('de').format(new Date());
+        //document.querySelector('#datum').innerText = datum
         var chart = null
         var zoomMode = "scroll"
         var zoomDomain = null
 
-
-
-
-        document.querySelector('#datum').innerText = datum
         document.addEventListener("DOMContentLoaded", function (event) {
-            console.log("DOM fully loaded and parsed");
+            /*
+            var trace1 = {
+                x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
+                y: [40, 50, 60],
+                name: 'yaxis data',
+                type: 'scatter'
+            };
 
+            var trace2 = {
+                x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
+                y: [4, 2, 2],
+                name: 'yaxis2 data',
+                yaxis: 'y2',
+                type: 'scatter'
+            };
 
+            var data = [trace1, trace2];
 
-            fetch('http://j-gimbel.ddns.net:8000/api/covidnumbers')
+            var layout = {
+                title: 'Double Y Axis Example',
+                yaxis: { title: 'yaxis title' },
+                yaxis2: {
+                    title: 'yaxis2 title',
+                    titlefont: { color: 'rgb(148, 103, 189)' },
+                    tickfont: { color: 'rgb(148, 103, 189)' },
+                    overlaying: 'y',
+                    side: 'right'
+                }
+            };
+            Plotly.newPlot('chart', data, layout);
+            */
+
+            fetch(base_url + '/api/regions')
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
+                    console.log("regions", data);
+                    parent = document.querySelector('#regions')
+                    children = []
+                    /*
+                    for (bl of data.bl) {
 
-                    bb = document.querySelector('#container').getBoundingClientRect();
-                    var chartSettings = {
+                        html += '<div class="region" data-t="bl" data-id="' + bl[0] + '" data-k="' + bl[1] + '">' + bl[2] + "</div>"
+                    }
+                    for (lk of data.lk) {
 
-                        size: {
-                            height: bb.height,
-                            width: bb.width
-                        },
-                        data: {
-                            x: 'x',
-                            columns: data,
-                            axes: {
-                                'Neue Fälle': 'y',
-                                "Neue Fälle (7 Tage D.)": 'y',
-                                'Neue Todesfälle (7 Tage D.)': 'y',
-                                'Wöchentl. Tests': 'y',
-                                '7-Tage-R-Wert': 'y2'
+                        html += '<div class="region" data-t="lk" data-t2="' + lk[2] + '" data-id="' + lk[0] + '">' + lk[1] + "</div>"
+                    }
+                    document.querySelector('#regions').innerHTML = html
+                    */
 
-                            },
-                        }
-                        ,
-                        axis: {
-                            x: {
-                                type: 'timeseries',
-                                tick: {
-                                    format: '%Y-%m-%d',
-                                    /*
-                                    culling: {
-                                        max: 15
-                                    },*/
-                                    fit: false
-                                },
-                                label: "Datum"
-                            },
-                            y: {
-                                label: "Anzahl"
-                            },
-                            y2: {
-                                show: true,
-                                label: "R-Wert"
+                    for (bl of data.bl) {
+                        var child = document.createElement("div");
+                        child.classList.add('region')
+                        child.dataset.t = "bl"
+                        child.dataset.id = bl[0]
+                        child.dataset.k = bl[1]
+                        child.innerText = bl[2]
+                        parent.append(child)
+                        child.addEventListener('click', (e) => {
+                            if (e.target.classList.toggle('selected')) {
+                                addSelected(e.target);
+
+                            } else {
+                                removeSelected(e.target)
                             }
-                        },
+                        })
 
-                        zoom: {
-                            enabled: true,
-                            rescale: true,
-                            onzoomend: d => {
-                                zoomDomain = d
-                                console.log(d)
-                            }
+                        if (child.innerText == "Berlin") {
+                            child.classList.toggle('selected')
+                            addSelected(child);
+                            region_selected = document.querySelector('#region_selected')
+                            var timer = setInterval(function () {
+                                bb = region_selected.getBoundingClientRect();
+                                if (bb.height > 0) {
+                                    region_selected.style['min-height'] = bb.height + "px"
+                                    clearInterval(timer);
+                                }
+                            }, 200);
 
-                        },
-                        point: {
-                            show: false
-                        },
-                        grid: {
-                            x: {
-                                show: true
-                            },
-                            y: {
-                                show: true
-                            }
-                        },
-                        transition: {
-                            duration: 0
                         }
                     }
+                    for (lk of data.lk) {
+                        var child = document.createElement("div");
+                        child.classList.add('region')
+                        child.dataset.t = "lk"
+                        child.dataset.t2 = lk[2]
+                        child.dataset.id = lk[0]
+                        child.innerText = lk[1]
+                        parent.append(child)
+                        child.addEventListener('click', (e) => {
+                            if (e.target.classList.toggle('selected')) {
+                                addSelected(e.target);
+                            } else {
+                                removeSelected(e.target)
+                            }
+                        })
+                    }
+                    let regions = document.querySelectorAll('.region')
+                    document.querySelector("#region_search").addEventListener("input", debouncedSearch);
 
 
+                    var myModal = new bootstrap.Modal(document.getElementById('myModal'))
 
-
-                    document.addEventListener("keydown", (e) => {
-
-                        chart.destroy()
-                        console.log(zoomMode)
-                        if (zoomMode == "scroll") {
-                            zoomMode = "drag"
-                        } else {
-                            zoomMode = "scroll"
-                        }
-                        chartSettings.zoom.type = zoomMode
-                        chart = c3.generate(chartSettings);
-                        if (zoomDomain != null) {
-                            chart.zoom(zoomDomain)
-                        }
-
-
-                    })
-
-                    chart = c3.generate(chartSettings);
-
-
+                    console.log(myModal)
+                    myModal.show()
+                    //myModal.hide()
 
                 });
+
         });
 
 

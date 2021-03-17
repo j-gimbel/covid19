@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
+import json
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -55,9 +56,23 @@ async def bundesland_daten(kuerzel: str, session: Session = Depends(get_db)):
 async def geojson_demo(date: str, session: Session = Depends(get_db)):
     return crud.get_geojson_demo(session=session, date=date)
 
+
+@app.get(
+    "/api/regions",  # ,
+    # response_model=List[schemas.GeoDemo_Base],
+)
+async def all_regions_in_db(session: Session = Depends(get_db)):
+    return crud.get_all_regions_in_db(session=session)
+
 @app.get(
     "/api/covidnumbers",  # ,
     # response_model=List[schemas.GeoDemo_Base],
 )
-async def covidnumbers(session: Session = Depends(get_db)):
-    return crud.get_covidnumbers(session=session)
+async def covidnumbers(p: str, session: Session = Depends(get_db)):
+
+    try:
+        params = json.loads(p)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=422, detail="query parameter p must be anm url-encoded json string.")
+
+    return crud.get_covidnumbers_new(session=session, params=params)
