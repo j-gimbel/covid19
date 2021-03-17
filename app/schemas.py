@@ -25,6 +25,28 @@ class Bundesland_Data_Base(BaseModel):
         orm_mode = True
 
 
+class Landkreise_Base(BaseModel):
+    Name: str
+    Typ: str
+    Einwohner: int
+    Flaeche: float
+    Dichte: float
+
+    class Config:
+        orm_mode = True
+
+
+class Lankreis_Data_Base(BaseModel):
+    Datum: str
+    AnzahlFall: str
+    AnzahlTodesfall: str
+    AnzahlGenesen: str
+    Kontaktrisiko: Optional[float]
+
+    class Config:
+        orm_mode = True
+
+
 class GeoDemo_Base(BaseModel):
 
     AnzahlFallNeu: int
