@@ -13,35 +13,6 @@
         integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <!--
-    <link href="c3.css" rel="stylesheet">
-    <script src="https://d3js.org/d3.v5.min.js"></script>
-    <script src="c3.min.js"></script>
-
-    <style>
-        .c3-axis-y text {
-            font-size: 12px;
-        }
-
-        .c3-axis-y2 text {
-            font-size: 12px;
-        }
-
-        .c3-axis-x text {
-            font-size: 15px;
-        }
-
-        .c3-legend-item {
-            font-size: 15px;
-        }
-
-
-        .c3-line {
-            stroke-width: 2px;
-        }
-     </style>
-
--->
     <style>
         .region {
             cursor: pointer;
@@ -55,7 +26,6 @@
 </head>
 
 <body style="height:100%;min-height:100%">
-    <!-- As a heading -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Covid 19 Data</a>
@@ -74,10 +44,8 @@
         <div class="row mt-3">
             <div class="col-sm-12 col-11">
                 <div id="chart" style="height:80vh"></div>
-
             </div>
         </div>
-
     </div>
 
     <!-- Modal -->
@@ -89,18 +57,15 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <div class="card">
                         <div class="card-header">Regions</div>
                         <div class="card-body">
                             <div class="card-text">
-
                                 <div class="card">
                                     <div class="card-header">Selected</div>
                                     <div id="region_selected" class="card-text py-2" style="min-height:48px">
                                     </div>
                                 </div>
-
                                 <input id="region_search" type="text" class="form-control"
                                     placeholder="...enter text to filter region list (e.g. Hessen / Berlin)"
                                     aria-label="region_search" aria-describedby="region_search">
@@ -138,7 +103,6 @@
                                             recovered
                                         </label>
                                     </div>
-
                                 </div>
                                 <div class="col">
                                     <label for="Modus" class="form-label">Modus</label>
@@ -165,15 +129,12 @@
                                         </label>
                                     </div>
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-
                 </div>
             </div>
         </div>
@@ -219,8 +180,6 @@
         // query new API data when modal closes
         var myModalEl = document.getElementById('myModal')
         myModalEl.addEventListener('hide.bs.modal', function (event) {
-
-
             params = {
                 'region_ids': {
                     'bl': [],
@@ -230,7 +189,6 @@
                 'compare_to_germany': false,
                 'modus': 'new_cases'
             }
-
             if (document.querySelector('#check_current_cases').checked) params.cases.push('current')
             if (document.querySelector('#check_dead_cases').checked) params.cases.push('dead')
             if (document.querySelector('#check_recovered_cases').checked) params.cases.push('recovered')
@@ -244,7 +202,6 @@
                     params.region_ids.lk.push(r.dataset.id)
                 }
             }
-
             var radios = document.getElementsByName('case_modus');
             for (r of radios) {
                 if (r.checked) params.modus = r.value
@@ -255,7 +212,7 @@
             fetch(base_url + '/api/covidnumbers?' + usp.toString())
                 .then(response => response.json())
                 .then(response => {
-                    console.log("response", response);
+                    //console.log("response", response);
                     var data = [];
                     for (bldata of response["bl"]) {
                         for (key of Object.keys(bldata)) {
@@ -296,7 +253,6 @@
                 })
         })
 
-
         function addSelected(t) {
             id = t.dataset.t + t.dataset.id
             let el = document.createElement("button");
@@ -315,21 +271,14 @@
         }
 
         function removeSelected(t) {
-            console.log(t)
             id = t.dataset.t + t.dataset.id
-            console.log(id)
             document.querySelector('#' + id).remove()
-
-
         }
 
         var debouncedSearch = debounce(function (e) {
-
             t = e.target.value
-
             elements = document.querySelectorAll('.region')
             for (e of elements) {
-
                 if (e.dataset.t == "bl") {
                     if (t.toLowerCase() != e.textContent.substring(0, t.length).toLowerCase()) {
                         e.classList.add('d-none')
@@ -340,7 +289,6 @@
                 }
 
                 else if (e.dataset.t == "lk") {
-
                     if (e.dataset.t2 == "LSK") {
                         console.log("LSK")
                         console.log(e.textContent.toLowerCase(), t.toLowerCase())
@@ -354,74 +302,26 @@
                         if (t.toLowerCase() != e.textContent.substring(3, 3 + t.length).toLowerCase()) {
                             e.classList.add('d-none')
                         }
-
                         else {
                             e.classList.remove('d-none')
                         }
                     }
                 }
-
             }
         }, 250)
-
 
         //const datum = new Intl.DateTimeFormat('de').format(new Date());
         //document.querySelector('#datum').innerText = datum
         var chart = null
         var zoomMode = "scroll"
         var zoomDomain = null
-
         document.addEventListener("DOMContentLoaded", function (event) {
-            /*
-            var trace1 = {
-                x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-                y: [40, 50, 60],
-                name: 'yaxis data',
-                type: 'scatter'
-            };
-
-            var trace2 = {
-                x: ['2013-10-04 22:23:00', '2013-11-04 22:23:00', '2013-12-04 22:23:00'],
-                y: [4, 2, 2],
-                name: 'yaxis2 data',
-                yaxis: 'y2',
-                type: 'scatter'
-            };
-
-            var data = [trace1, trace2];
-
-            var layout = {
-                title: 'Double Y Axis Example',
-                yaxis: { title: 'yaxis title' },
-                yaxis2: {
-                    title: 'yaxis2 title',
-                    titlefont: { color: 'rgb(148, 103, 189)' },
-                    tickfont: { color: 'rgb(148, 103, 189)' },
-                    overlaying: 'y',
-                    side: 'right'
-                }
-            };
-            Plotly.newPlot('chart', data, layout);
-            */
-
             fetch(base_url + '/api/regions')
                 .then(response => response.json())
                 .then(data => {
                     console.log("regions", data);
                     parent = document.querySelector('#regions')
                     children = []
-                    /*
-                    for (bl of data.bl) {
-
-                        html += '<div class="region" data-t="bl" data-id="' + bl[0] + '" data-k="' + bl[1] + '">' + bl[2] + "</div>"
-                    }
-                    for (lk of data.lk) {
-
-                        html += '<div class="region" data-t="lk" data-t2="' + lk[2] + '" data-id="' + lk[0] + '">' + lk[1] + "</div>"
-                    }
-                    document.querySelector('#regions').innerHTML = html
-                    */
-
                     for (bl of data.bl) {
                         var child = document.createElement("div");
                         child.classList.add('region')
@@ -433,7 +333,6 @@
                         child.addEventListener('click', (e) => {
                             if (e.target.classList.toggle('selected')) {
                                 addSelected(e.target);
-
                             } else {
                                 removeSelected(e.target)
                             }
@@ -471,25 +370,11 @@
                     }
                     let regions = document.querySelectorAll('.region')
                     document.querySelector("#region_search").addEventListener("input", debouncedSearch);
-
-
                     var myModal = new bootstrap.Modal(document.getElementById('myModal'))
-
-                    console.log(myModal)
                     myModal.show()
                     //myModal.hide()
-
                 });
-
         });
-
-
-
-
-
-
-
-
     </script>
 </body>
 
