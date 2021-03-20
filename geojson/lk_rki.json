@@ -1,0 +1,2147 @@
+[
+   [
+      0,
+      "Deutschland",
+      "BR"
+   ],
+   [
+      1,
+      "Schleswig-Holstein",
+      "BR"
+   ],
+   [
+      10,
+      "Saarland",
+      "BR"
+   ],
+   [
+      1001,
+      "SK Flensburg",
+      "SK"
+   ],
+   [
+      1002,
+      "SK Kiel",
+      "SK"
+   ],
+   [
+      1003,
+      "SK Lübeck",
+      "SK"
+   ],
+   [
+      1004,
+      "SK Neumünster",
+      "SK"
+   ],
+   [
+      10041,
+      "LK Stadtverband Saarbrücken",
+      "LK"
+   ],
+   [
+      10042,
+      "LK Merzig-Wadern",
+      "LK"
+   ],
+   [
+      10043,
+      "LK Neunkirchen",
+      "LK"
+   ],
+   [
+      10044,
+      "LK Saarlouis",
+      "LK"
+   ],
+   [
+      10045,
+      "LK Saar-Pfalz-Kreis",
+      "LK"
+   ],
+   [
+      10046,
+      "LK Sankt Wendel",
+      "LK"
+   ],
+   [
+      1051,
+      "LK Dithmarschen",
+      "LK"
+   ],
+   [
+      1053,
+      "LK Herzogtum Lauenburg",
+      "LK"
+   ],
+   [
+      1054,
+      "LK Nordfriesland",
+      "LK"
+   ],
+   [
+      1055,
+      "LK Ostholstein",
+      "LK"
+   ],
+   [
+      1056,
+      "LK Pinneberg",
+      "LK"
+   ],
+   [
+      1057,
+      "LK Plön",
+      "LK"
+   ],
+   [
+      1058,
+      "LK Rendsburg-Eckernförde",
+      "LK"
+   ],
+   [
+      1059,
+      "LK Schleswig-Flensburg",
+      "LK"
+   ],
+   [
+      1060,
+      "LK Segeberg",
+      "LK"
+   ],
+   [
+      1061,
+      "LK Steinburg",
+      "LK"
+   ],
+   [
+      1062,
+      "LK Stormarn",
+      "LK"
+   ],
+   [
+      11,
+      "Berlin",
+      "BR"
+   ],
+   [
+      11001,
+      "SK Berlin Mitte",
+      "SK"
+   ],
+   [
+      11002,
+      "SK Berlin Friedrichshain-Kreuzberg",
+      "SK"
+   ],
+   [
+      11003,
+      "SK Berlin Pankow",
+      "SK"
+   ],
+   [
+      11004,
+      "SK Berlin Charlottenburg-Wilmersdorf",
+      "SK"
+   ],
+   [
+      11005,
+      "SK Berlin Spandau",
+      "SK"
+   ],
+   [
+      11006,
+      "SK Berlin Steglitz-Zehlendorf",
+      "SK"
+   ],
+   [
+      11007,
+      "SK Berlin Tempelhof-Schöneberg",
+      "SK"
+   ],
+   [
+      11008,
+      "SK Berlin Neukölln",
+      "SK"
+   ],
+   [
+      11009,
+      "SK Berlin Treptow-Köpenick",
+      "SK"
+   ],
+   [
+      11010,
+      "SK Berlin Marzahn-Hellersdorf",
+      "SK"
+   ],
+   [
+      11011,
+      "SK Berlin Lichtenberg",
+      "SK"
+   ],
+   [
+      11012,
+      "SK Berlin Reinickendorf",
+      "SK"
+   ],
+   [
+      12,
+      "Brandenburg",
+      "BR"
+   ],
+   [
+      12051,
+      "SK Brandenburg a.d.Havel",
+      "SK"
+   ],
+   [
+      12052,
+      "SK Cottbus",
+      "SK"
+   ],
+   [
+      12053,
+      "SK Frankfurt (Oder)",
+      "SK"
+   ],
+   [
+      12054,
+      "SK Potsdam",
+      "SK"
+   ],
+   [
+      12060,
+      "LK Barnim",
+      "LK"
+   ],
+   [
+      12061,
+      "LK Dahme-Spreewald",
+      "LK"
+   ],
+   [
+      12062,
+      "LK Elbe-Elster",
+      "LK"
+   ],
+   [
+      12063,
+      "LK Havelland",
+      "LK"
+   ],
+   [
+      12064,
+      "LK Märkisch-Oderland",
+      "LK"
+   ],
+   [
+      12065,
+      "LK Oberhavel",
+      "LK"
+   ],
+   [
+      12066,
+      "LK Oberspreewald-Lausitz",
+      "LK"
+   ],
+   [
+      12067,
+      "LK Oder-Spree",
+      "LK"
+   ],
+   [
+      12068,
+      "LK Ostprignitz-Ruppin",
+      "LK"
+   ],
+   [
+      12069,
+      "LK Potsdam-Mittelmark",
+      "LK"
+   ],
+   [
+      12070,
+      "LK Prignitz",
+      "LK"
+   ],
+   [
+      12071,
+      "LK Spree-Neiße",
+      "LK"
+   ],
+   [
+      12072,
+      "LK Teltow-Fläming",
+      "LK"
+   ],
+   [
+      12073,
+      "LK Uckermark",
+      "LK"
+   ],
+   [
+      13,
+      "Mecklenburg-Vorpommern",
+      "BR"
+   ],
+   [
+      13003,
+      "SK Rostock",
+      "SK"
+   ],
+   [
+      13004,
+      "SK Schwerin",
+      "SK"
+   ],
+   [
+      13071,
+      "LK Mecklenburgische Seenplatte",
+      "LK"
+   ],
+   [
+      13072,
+      "LK Rostock",
+      "LK"
+   ],
+   [
+      13073,
+      "LK Vorpommern-Rügen",
+      "LK"
+   ],
+   [
+      13074,
+      "LK Nordwestmecklenburg",
+      "LK"
+   ],
+   [
+      13075,
+      "LK Vorpommern-Greifswald",
+      "LK"
+   ],
+   [
+      13076,
+      "LK Ludwigslust-Parchim",
+      "LK"
+   ],
+   [
+      14,
+      "Sachsen",
+      "BR"
+   ],
+   [
+      14511,
+      "SK Chemnitz",
+      "SK"
+   ],
+   [
+      14521,
+      "LK Erzgebirgskreis",
+      "LK"
+   ],
+   [
+      14522,
+      "LK Mittelsachsen",
+      "LK"
+   ],
+   [
+      14523,
+      "LK Vogtlandkreis",
+      "LK"
+   ],
+   [
+      14524,
+      "LK Zwickau",
+      "LK"
+   ],
+   [
+      14612,
+      "SK Dresden",
+      "SK"
+   ],
+   [
+      14625,
+      "LK Bautzen",
+      "LK"
+   ],
+   [
+      14626,
+      "LK Görlitz",
+      "LK"
+   ],
+   [
+      14627,
+      "LK Meißen",
+      "LK"
+   ],
+   [
+      14628,
+      "LK Sächsische Schweiz-Osterzgebirge",
+      "LK"
+   ],
+   [
+      14713,
+      "SK Leipzig",
+      "SK"
+   ],
+   [
+      14729,
+      "LK Leipzig",
+      "LK"
+   ],
+   [
+      14730,
+      "LK Nordsachsen",
+      "LK"
+   ],
+   [
+      15,
+      "Sachsen-Anhalt",
+      "BR"
+   ],
+   [
+      15001,
+      "SK Dessau-Roßlau",
+      "SK"
+   ],
+   [
+      15002,
+      "SK Halle",
+      "SK"
+   ],
+   [
+      15003,
+      "SK Magdeburg",
+      "SK"
+   ],
+   [
+      15081,
+      "LK Altmarkkreis Salzwedel",
+      "LK"
+   ],
+   [
+      15082,
+      "LK Anhalt-Bitterfeld",
+      "LK"
+   ],
+   [
+      15083,
+      "LK Börde",
+      "LK"
+   ],
+   [
+      15084,
+      "LK Burgenlandkreis",
+      "LK"
+   ],
+   [
+      15085,
+      "LK Harz",
+      "LK"
+   ],
+   [
+      15086,
+      "LK Jerichower Land",
+      "LK"
+   ],
+   [
+      15087,
+      "LK Mansfeld-Südharz",
+      "LK"
+   ],
+   [
+      15088,
+      "LK Saalekreis",
+      "LK"
+   ],
+   [
+      15089,
+      "LK Salzlandkreis",
+      "LK"
+   ],
+   [
+      15090,
+      "LK Stendal",
+      "LK"
+   ],
+   [
+      15091,
+      "LK Wittenberg",
+      "LK"
+   ],
+   [
+      16,
+      "Thüringen",
+      "BR"
+   ],
+   [
+      16051,
+      "SK Erfurt",
+      "SK"
+   ],
+   [
+      16052,
+      "SK Gera",
+      "SK"
+   ],
+   [
+      16053,
+      "SK Jena",
+      "SK"
+   ],
+   [
+      16054,
+      "SK Suhl",
+      "SK"
+   ],
+   [
+      16055,
+      "SK Weimar",
+      "SK"
+   ],
+   [
+      16056,
+      "SK Eisenach",
+      "SK"
+   ],
+   [
+      16061,
+      "LK Eichsfeld",
+      "LK"
+   ],
+   [
+      16062,
+      "LK Nordhausen",
+      "LK"
+   ],
+   [
+      16063,
+      "LK Wartburgkreis",
+      "LK"
+   ],
+   [
+      16064,
+      "LK Unstrut-Hainich-Kreis",
+      "LK"
+   ],
+   [
+      16065,
+      "LK Kyffhäuserkreis",
+      "LK"
+   ],
+   [
+      16066,
+      "LK Schmalkalden-Meiningen",
+      "LK"
+   ],
+   [
+      16067,
+      "LK Gotha",
+      "LK"
+   ],
+   [
+      16068,
+      "LK Sömmerda",
+      "LK"
+   ],
+   [
+      16069,
+      "LK Hildburghausen",
+      "LK"
+   ],
+   [
+      16070,
+      "LK Ilm-Kreis",
+      "LK"
+   ],
+   [
+      16071,
+      "LK Weimarer Land",
+      "LK"
+   ],
+   [
+      16072,
+      "LK Sonneberg",
+      "LK"
+   ],
+   [
+      16073,
+      "LK Saalfeld-Rudolstadt",
+      "LK"
+   ],
+   [
+      16074,
+      "LK Saale-Holzland-Kreis",
+      "LK"
+   ],
+   [
+      16075,
+      "LK Saale-Orla-Kreis",
+      "LK"
+   ],
+   [
+      16076,
+      "LK Greiz",
+      "LK"
+   ],
+   [
+      16077,
+      "LK Altenburger Land",
+      "LK"
+   ],
+   [
+      2,
+      "Hamburg",
+      "BR"
+   ],
+   [
+      2000,
+      "SK Hamburg",
+      "SK"
+   ],
+   [
+      3,
+      "Niedersachsen",
+      "BR"
+   ],
+   [
+      3101,
+      "SK Braunschweig",
+      "SK"
+   ],
+   [
+      3102,
+      "SK Salzgitter",
+      "SK"
+   ],
+   [
+      3103,
+      "SK Wolfsburg",
+      "SK"
+   ],
+   [
+      3151,
+      "LK Gifhorn",
+      "LK"
+   ],
+   [
+      3153,
+      "LK Goslar",
+      "LK"
+   ],
+   [
+      3154,
+      "LK Helmstedt",
+      "LK"
+   ],
+   [
+      3155,
+      "LK Northeim",
+      "LK"
+   ],
+   [
+      3157,
+      "LK Peine",
+      "LK"
+   ],
+   [
+      3158,
+      "LK Wolfenbüttel",
+      "LK"
+   ],
+   [
+      3159,
+      "LK Göttingen",
+      "LK"
+   ],
+   [
+      3241,
+      "Region Hannover",
+      "LSK"
+   ],
+   [
+      3251,
+      "LK Diepholz",
+      "LK"
+   ],
+   [
+      3252,
+      "LK Hameln-Pyrmont",
+      "LK"
+   ],
+   [
+      3254,
+      "LK Hildesheim",
+      "LK"
+   ],
+   [
+      3255,
+      "LK Holzminden",
+      "LK"
+   ],
+   [
+      3256,
+      "LK Nienburg (Weser)",
+      "LK"
+   ],
+   [
+      3257,
+      "LK Schaumburg",
+      "LK"
+   ],
+   [
+      3351,
+      "LK Celle",
+      "LK"
+   ],
+   [
+      3352,
+      "LK Cuxhaven",
+      "LK"
+   ],
+   [
+      3353,
+      "LK Harburg",
+      "LK"
+   ],
+   [
+      3354,
+      "LK Lüchow-Dannenberg",
+      "LK"
+   ],
+   [
+      3355,
+      "LK Lüneburg",
+      "LK"
+   ],
+   [
+      3356,
+      "LK Osterholz",
+      "LK"
+   ],
+   [
+      3357,
+      "LK Rotenburg (Wümme)",
+      "LK"
+   ],
+   [
+      3358,
+      "LK Heidekreis",
+      "LK"
+   ],
+   [
+      3359,
+      "LK Stade",
+      "LK"
+   ],
+   [
+      3360,
+      "LK Uelzen",
+      "LK"
+   ],
+   [
+      3361,
+      "LK Verden",
+      "LK"
+   ],
+   [
+      3401,
+      "SK Delmenhorst",
+      "SK"
+   ],
+   [
+      3402,
+      "SK Emden",
+      "SK"
+   ],
+   [
+      3403,
+      "SK Oldenburg",
+      "SK"
+   ],
+   [
+      3404,
+      "SK Osnabrück",
+      "SK"
+   ],
+   [
+      3405,
+      "SK Wilhelmshaven",
+      "SK"
+   ],
+   [
+      3451,
+      "LK Ammerland",
+      "LK"
+   ],
+   [
+      3452,
+      "LK Aurich",
+      "LK"
+   ],
+   [
+      3453,
+      "LK Cloppenburg",
+      "LK"
+   ],
+   [
+      3454,
+      "LK Emsland",
+      "LK"
+   ],
+   [
+      3455,
+      "LK Friesland",
+      "LK"
+   ],
+   [
+      3456,
+      "LK Grafschaft Bentheim",
+      "LK"
+   ],
+   [
+      3457,
+      "LK Leer",
+      "LK"
+   ],
+   [
+      3458,
+      "LK Oldenburg",
+      "LK"
+   ],
+   [
+      3459,
+      "LK Osnabrück",
+      "LK"
+   ],
+   [
+      3460,
+      "LK Vechta",
+      "LK"
+   ],
+   [
+      3461,
+      "LK Wesermarsch",
+      "LK"
+   ],
+   [
+      3462,
+      "LK Wittmund",
+      "LK"
+   ],
+   [
+      4,
+      "Bremen",
+      "BR"
+   ],
+   [
+      4011,
+      "SK Bremen",
+      "SK"
+   ],
+   [
+      4012,
+      "SK Bremerhaven",
+      "SK"
+   ],
+   [
+      5,
+      "Nordrhein-Westfalen",
+      "BR"
+   ],
+   [
+      5111,
+      "SK Düsseldorf",
+      "SK"
+   ],
+   [
+      5112,
+      "SK Duisburg",
+      "SK"
+   ],
+   [
+      5113,
+      "SK Essen",
+      "SK"
+   ],
+   [
+      5114,
+      "SK Krefeld",
+      "SK"
+   ],
+   [
+      5116,
+      "SK Mönchengladbach",
+      "SK"
+   ],
+   [
+      5117,
+      "SK Mülheim a.d.Ruhr",
+      "SK"
+   ],
+   [
+      5119,
+      "SK Oberhausen",
+      "SK"
+   ],
+   [
+      5120,
+      "SK Remscheid",
+      "SK"
+   ],
+   [
+      5122,
+      "SK Solingen",
+      "SK"
+   ],
+   [
+      5124,
+      "SK Wuppertal",
+      "SK"
+   ],
+   [
+      5154,
+      "LK Kleve",
+      "LK"
+   ],
+   [
+      5158,
+      "LK Mettmann",
+      "LK"
+   ],
+   [
+      5162,
+      "LK Rhein-Kreis Neuss",
+      "LK"
+   ],
+   [
+      5166,
+      "LK Viersen",
+      "LK"
+   ],
+   [
+      5170,
+      "LK Wesel",
+      "LK"
+   ],
+   [
+      5314,
+      "SK Bonn",
+      "SK"
+   ],
+   [
+      5315,
+      "SK Köln",
+      "SK"
+   ],
+   [
+      5316,
+      "SK Leverkusen",
+      "SK"
+   ],
+   [
+      5334,
+      "StadtRegion Aachen",
+      "LSK"
+   ],
+   [
+      5358,
+      "LK Düren",
+      "LK"
+   ],
+   [
+      5362,
+      "LK Rhein-Erft-Kreis",
+      "LK"
+   ],
+   [
+      5366,
+      "LK Euskirchen",
+      "LK"
+   ],
+   [
+      5370,
+      "LK Heinsberg",
+      "LK"
+   ],
+   [
+      5374,
+      "LK Oberbergischer Kreis",
+      "LK"
+   ],
+   [
+      5378,
+      "LK Rheinisch-Bergischer Kreis",
+      "LK"
+   ],
+   [
+      5382,
+      "LK Rhein-Sieg-Kreis",
+      "LK"
+   ],
+   [
+      5512,
+      "SK Bottrop",
+      "SK"
+   ],
+   [
+      5513,
+      "SK Gelsenkirchen",
+      "SK"
+   ],
+   [
+      5515,
+      "SK Münster",
+      "SK"
+   ],
+   [
+      5554,
+      "LK Borken",
+      "LK"
+   ],
+   [
+      5558,
+      "LK Coesfeld",
+      "LK"
+   ],
+   [
+      5562,
+      "LK Recklinghausen",
+      "LK"
+   ],
+   [
+      5566,
+      "LK Steinfurt",
+      "LK"
+   ],
+   [
+      5570,
+      "LK Warendorf",
+      "LK"
+   ],
+   [
+      5711,
+      "SK Bielefeld",
+      "SK"
+   ],
+   [
+      5754,
+      "LK Gütersloh",
+      "LK"
+   ],
+   [
+      5758,
+      "LK Herford",
+      "LK"
+   ],
+   [
+      5762,
+      "LK Höxter",
+      "LK"
+   ],
+   [
+      5766,
+      "LK Lippe",
+      "LK"
+   ],
+   [
+      5770,
+      "LK Minden-Lübbecke",
+      "LK"
+   ],
+   [
+      5774,
+      "LK Paderborn",
+      "LK"
+   ],
+   [
+      5911,
+      "SK Bochum",
+      "SK"
+   ],
+   [
+      5913,
+      "SK Dortmund",
+      "SK"
+   ],
+   [
+      5914,
+      "SK Hagen",
+      "SK"
+   ],
+   [
+      5915,
+      "SK Hamm",
+      "SK"
+   ],
+   [
+      5916,
+      "SK Herne",
+      "SK"
+   ],
+   [
+      5954,
+      "LK Ennepe-Ruhr-Kreis",
+      "LK"
+   ],
+   [
+      5958,
+      "LK Hochsauerlandkreis",
+      "LK"
+   ],
+   [
+      5962,
+      "LK Märkischer Kreis",
+      "LK"
+   ],
+   [
+      5966,
+      "LK Olpe",
+      "LK"
+   ],
+   [
+      5970,
+      "LK Siegen-Wittgenstein",
+      "LK"
+   ],
+   [
+      5974,
+      "LK Soest",
+      "LK"
+   ],
+   [
+      5978,
+      "LK Unna",
+      "LK"
+   ],
+   [
+      6,
+      "Hessen",
+      "BR"
+   ],
+   [
+      6411,
+      "SK Darmstadt",
+      "SK"
+   ],
+   [
+      6412,
+      "SK Frankfurt am Main",
+      "SK"
+   ],
+   [
+      6413,
+      "SK Offenbach",
+      "SK"
+   ],
+   [
+      6414,
+      "SK Wiesbaden",
+      "SK"
+   ],
+   [
+      6431,
+      "LK Bergstraße",
+      "LK"
+   ],
+   [
+      6432,
+      "LK Darmstadt-Dieburg",
+      "LK"
+   ],
+   [
+      6433,
+      "LK Groß-Gerau",
+      "LK"
+   ],
+   [
+      6434,
+      "LK Hochtaunuskreis",
+      "LK"
+   ],
+   [
+      6435,
+      "LK Main-Kinzig-Kreis",
+      "LK"
+   ],
+   [
+      6436,
+      "LK Main-Taunus-Kreis",
+      "LK"
+   ],
+   [
+      6437,
+      "LK Odenwaldkreis",
+      "LK"
+   ],
+   [
+      6438,
+      "LK Offenbach",
+      "LK"
+   ],
+   [
+      6439,
+      "LK Rheingau-Taunus-Kreis",
+      "LK"
+   ],
+   [
+      6440,
+      "LK Wetteraukreis",
+      "LK"
+   ],
+   [
+      6531,
+      "LK Gießen",
+      "LK"
+   ],
+   [
+      6532,
+      "LK Lahn-Dill-Kreis",
+      "LK"
+   ],
+   [
+      6533,
+      "LK Limburg-Weilburg",
+      "LK"
+   ],
+   [
+      6534,
+      "LK Marburg-Biedenkopf",
+      "LK"
+   ],
+   [
+      6535,
+      "LK Vogelsbergkreis",
+      "LK"
+   ],
+   [
+      6611,
+      "SK Kassel",
+      "SK"
+   ],
+   [
+      6631,
+      "LK Fulda",
+      "LK"
+   ],
+   [
+      6632,
+      "LK Hersfeld-Rotenburg",
+      "LK"
+   ],
+   [
+      6633,
+      "LK Kassel",
+      "LK"
+   ],
+   [
+      6634,
+      "LK Schwalm-Eder-Kreis",
+      "LK"
+   ],
+   [
+      6635,
+      "LK Waldeck-Frankenberg",
+      "LK"
+   ],
+   [
+      6636,
+      "LK Werra-Meißner-Kreis",
+      "LK"
+   ],
+   [
+      7,
+      "Rheinland-Pfalz",
+      "BR"
+   ],
+   [
+      7111,
+      "SK Koblenz",
+      "SK"
+   ],
+   [
+      7131,
+      "LK Ahrweiler",
+      "LK"
+   ],
+   [
+      7132,
+      "LK Altenkirchen",
+      "LK"
+   ],
+   [
+      7133,
+      "LK Bad Kreuznach",
+      "LK"
+   ],
+   [
+      7134,
+      "LK Birkenfeld",
+      "LK"
+   ],
+   [
+      7135,
+      "LK Cochem-Zell",
+      "LK"
+   ],
+   [
+      7137,
+      "LK Mayen-Koblenz",
+      "LK"
+   ],
+   [
+      7138,
+      "LK Neuwied",
+      "LK"
+   ],
+   [
+      7140,
+      "LK Rhein-Hunsrück-Kreis",
+      "LK"
+   ],
+   [
+      7141,
+      "LK Rhein-Lahn-Kreis",
+      "LK"
+   ],
+   [
+      7143,
+      "LK Westerwaldkreis",
+      "LK"
+   ],
+   [
+      7211,
+      "SK Trier",
+      "SK"
+   ],
+   [
+      7231,
+      "LK Bernkastel-Wittlich",
+      "LK"
+   ],
+   [
+      7232,
+      "LK Bitburg-Prüm",
+      "LK"
+   ],
+   [
+      7233,
+      "LK Vulkaneifel",
+      "LK"
+   ],
+   [
+      7235,
+      "LK Trier-Saarburg",
+      "LK"
+   ],
+   [
+      7311,
+      "SK Frankenthal",
+      "SK"
+   ],
+   [
+      7312,
+      "SK Kaiserslautern",
+      "SK"
+   ],
+   [
+      7313,
+      "SK Landau i.d.Pfalz",
+      "SK"
+   ],
+   [
+      7314,
+      "SK Ludwigshafen",
+      "SK"
+   ],
+   [
+      7315,
+      "SK Mainz",
+      "SK"
+   ],
+   [
+      7316,
+      "SK Neustadt a.d.Weinstraße",
+      "SK"
+   ],
+   [
+      7317,
+      "SK Pirmasens",
+      "SK"
+   ],
+   [
+      7318,
+      "SK Speyer",
+      "SK"
+   ],
+   [
+      7319,
+      "SK Worms",
+      "SK"
+   ],
+   [
+      7320,
+      "SK Zweibrücken",
+      "SK"
+   ],
+   [
+      7331,
+      "LK Alzey-Worms",
+      "LK"
+   ],
+   [
+      7332,
+      "LK Bad Dürkheim",
+      "LK"
+   ],
+   [
+      7333,
+      "LK Donnersbergkreis",
+      "LK"
+   ],
+   [
+      7334,
+      "LK Germersheim",
+      "LK"
+   ],
+   [
+      7335,
+      "LK Kaiserslautern",
+      "LK"
+   ],
+   [
+      7336,
+      "LK Kusel",
+      "LK"
+   ],
+   [
+      7337,
+      "LK Südliche Weinstraße",
+      "LK"
+   ],
+   [
+      7338,
+      "LK Rhein-Pfalz-Kreis",
+      "LK"
+   ],
+   [
+      7339,
+      "LK Mainz-Bingen",
+      "LK"
+   ],
+   [
+      7340,
+      "LK Südwestpfalz",
+      "LK"
+   ],
+   [
+      8,
+      "Baden-Württemberg",
+      "BR"
+   ],
+   [
+      8111,
+      "SK Stuttgart",
+      "SK"
+   ],
+   [
+      8115,
+      "LK Böblingen",
+      "LK"
+   ],
+   [
+      8116,
+      "LK Esslingen",
+      "LK"
+   ],
+   [
+      8117,
+      "LK Göppingen",
+      "LK"
+   ],
+   [
+      8118,
+      "LK Ludwigsburg",
+      "LK"
+   ],
+   [
+      8119,
+      "LK Rems-Murr-Kreis",
+      "LK"
+   ],
+   [
+      8121,
+      "SK Heilbronn",
+      "SK"
+   ],
+   [
+      8125,
+      "LK Heilbronn",
+      "LK"
+   ],
+   [
+      8126,
+      "LK Hohenlohekreis",
+      "LK"
+   ],
+   [
+      8127,
+      "LK Schwäbisch Hall",
+      "LK"
+   ],
+   [
+      8128,
+      "LK Main-Tauber-Kreis",
+      "LK"
+   ],
+   [
+      8135,
+      "LK Heidenheim",
+      "LK"
+   ],
+   [
+      8136,
+      "LK Ostalbkreis",
+      "LK"
+   ],
+   [
+      8211,
+      "SK Baden-Baden",
+      "SK"
+   ],
+   [
+      8212,
+      "SK Karlsruhe",
+      "SK"
+   ],
+   [
+      8215,
+      "LK Karlsruhe",
+      "LK"
+   ],
+   [
+      8216,
+      "LK Rastatt",
+      "LK"
+   ],
+   [
+      8221,
+      "SK Heidelberg",
+      "SK"
+   ],
+   [
+      8222,
+      "SK Mannheim",
+      "SK"
+   ],
+   [
+      8225,
+      "LK Neckar-Odenwald-Kreis",
+      "LK"
+   ],
+   [
+      8226,
+      "LK Rhein-Neckar-Kreis",
+      "LK"
+   ],
+   [
+      8231,
+      "SK Pforzheim",
+      "SK"
+   ],
+   [
+      8235,
+      "LK Calw",
+      "LK"
+   ],
+   [
+      8236,
+      "LK Enzkreis",
+      "LK"
+   ],
+   [
+      8237,
+      "LK Freudenstadt",
+      "LK"
+   ],
+   [
+      8311,
+      "SK Freiburg i.Breisgau",
+      "SK"
+   ],
+   [
+      8315,
+      "LK Breisgau-Hochschwarzwald",
+      "LK"
+   ],
+   [
+      8316,
+      "LK Emmendingen",
+      "LK"
+   ],
+   [
+      8317,
+      "LK Ortenaukreis",
+      "LK"
+   ],
+   [
+      8325,
+      "LK Rottweil",
+      "LK"
+   ],
+   [
+      8326,
+      "LK Schwarzwald-Baar-Kreis",
+      "LK"
+   ],
+   [
+      8327,
+      "LK Tuttlingen",
+      "LK"
+   ],
+   [
+      8335,
+      "LK Konstanz",
+      "LK"
+   ],
+   [
+      8336,
+      "LK Lörrach",
+      "LK"
+   ],
+   [
+      8337,
+      "LK Waldshut",
+      "LK"
+   ],
+   [
+      8415,
+      "LK Reutlingen",
+      "LK"
+   ],
+   [
+      8416,
+      "LK Tübingen",
+      "LK"
+   ],
+   [
+      8417,
+      "LK Zollernalbkreis",
+      "LK"
+   ],
+   [
+      8421,
+      "SK Ulm",
+      "SK"
+   ],
+   [
+      8425,
+      "LK Alb-Donau-Kreis",
+      "LK"
+   ],
+   [
+      8426,
+      "LK Biberach",
+      "LK"
+   ],
+   [
+      8435,
+      "LK Bodenseekreis",
+      "LK"
+   ],
+   [
+      8436,
+      "LK Ravensburg",
+      "LK"
+   ],
+   [
+      8437,
+      "LK Sigmaringen",
+      "LK"
+   ],
+   [
+      9,
+      "Bayern",
+      "BR"
+   ],
+   [
+      9161,
+      "SK Ingolstadt",
+      "SK"
+   ],
+   [
+      9162,
+      "SK München",
+      "SK"
+   ],
+   [
+      9163,
+      "SK Rosenheim",
+      "SK"
+   ],
+   [
+      9171,
+      "LK Altötting",
+      "LK"
+   ],
+   [
+      9172,
+      "LK Berchtesgadener Land",
+      "LK"
+   ],
+   [
+      9173,
+      "LK Bad Tölz-Wolfratshausen",
+      "LK"
+   ],
+   [
+      9174,
+      "LK Dachau",
+      "LK"
+   ],
+   [
+      9175,
+      "LK Ebersberg",
+      "LK"
+   ],
+   [
+      9176,
+      "LK Eichstätt",
+      "LK"
+   ],
+   [
+      9177,
+      "LK Erding",
+      "LK"
+   ],
+   [
+      9178,
+      "LK Freising",
+      "LK"
+   ],
+   [
+      9179,
+      "LK Fürstenfeldbruck",
+      "LK"
+   ],
+   [
+      9180,
+      "LK Garmisch-Partenkirchen",
+      "LK"
+   ],
+   [
+      9181,
+      "LK Landsberg a.Lech",
+      "LK"
+   ],
+   [
+      9182,
+      "LK Miesbach",
+      "LK"
+   ],
+   [
+      9183,
+      "LK Mühldorf a.Inn",
+      "LK"
+   ],
+   [
+      9184,
+      "LK München",
+      "LK"
+   ],
+   [
+      9185,
+      "LK Neuburg-Schrobenhausen",
+      "LK"
+   ],
+   [
+      9186,
+      "LK Pfaffenhofen a.d.Ilm",
+      "LK"
+   ],
+   [
+      9187,
+      "LK Rosenheim",
+      "LK"
+   ],
+   [
+      9188,
+      "LK Starnberg",
+      "LK"
+   ],
+   [
+      9189,
+      "LK Traunstein",
+      "LK"
+   ],
+   [
+      9190,
+      "LK Weilheim-Schongau",
+      "LK"
+   ],
+   [
+      9261,
+      "SK Landshut",
+      "SK"
+   ],
+   [
+      9262,
+      "SK Passau",
+      "SK"
+   ],
+   [
+      9263,
+      "SK Straubing",
+      "SK"
+   ],
+   [
+      9271,
+      "LK Deggendorf",
+      "LK"
+   ],
+   [
+      9272,
+      "LK Freyung-Grafenau",
+      "LK"
+   ],
+   [
+      9273,
+      "LK Kelheim",
+      "LK"
+   ],
+   [
+      9274,
+      "LK Landshut",
+      "LK"
+   ],
+   [
+      9275,
+      "LK Passau",
+      "LK"
+   ],
+   [
+      9276,
+      "LK Regen",
+      "LK"
+   ],
+   [
+      9277,
+      "LK Rottal-Inn",
+      "LK"
+   ],
+   [
+      9278,
+      "LK Straubing-Bogen",
+      "LK"
+   ],
+   [
+      9279,
+      "LK Dingolfing-Landau",
+      "LK"
+   ],
+   [
+      9361,
+      "SK Amberg",
+      "SK"
+   ],
+   [
+      9362,
+      "SK Regensburg",
+      "SK"
+   ],
+   [
+      9363,
+      "SK Weiden i.d.OPf.",
+      "SK"
+   ],
+   [
+      9371,
+      "LK Amberg-Sulzbach",
+      "LK"
+   ],
+   [
+      9372,
+      "LK Cham",
+      "LK"
+   ],
+   [
+      9373,
+      "LK Neumarkt i.d.OPf.",
+      "LK"
+   ],
+   [
+      9374,
+      "LK Neustadt a.d.Waldnaab",
+      "LK"
+   ],
+   [
+      9375,
+      "LK Regensburg",
+      "LK"
+   ],
+   [
+      9376,
+      "LK Schwandorf",
+      "LK"
+   ],
+   [
+      9377,
+      "LK Tirschenreuth",
+      "LK"
+   ],
+   [
+      9461,
+      "SK Bamberg",
+      "SK"
+   ],
+   [
+      9462,
+      "SK Bayreuth",
+      "SK"
+   ],
+   [
+      9463,
+      "SK Coburg",
+      "SK"
+   ],
+   [
+      9464,
+      "SK Hof",
+      "SK"
+   ],
+   [
+      9471,
+      "LK Bamberg",
+      "LK"
+   ],
+   [
+      9472,
+      "LK Bayreuth",
+      "LK"
+   ],
+   [
+      9473,
+      "LK Coburg",
+      "LK"
+   ],
+   [
+      9474,
+      "LK Forchheim",
+      "LK"
+   ],
+   [
+      9475,
+      "LK Hof",
+      "LK"
+   ],
+   [
+      9476,
+      "LK Kronach",
+      "LK"
+   ],
+   [
+      9477,
+      "LK Kulmbach",
+      "LK"
+   ],
+   [
+      9478,
+      "LK Lichtenfels",
+      "LK"
+   ],
+   [
+      9479,
+      "LK Wunsiedel i.Fichtelgebirge",
+      "LK"
+   ],
+   [
+      9561,
+      "SK Ansbach",
+      "SK"
+   ],
+   [
+      9562,
+      "SK Erlangen",
+      "SK"
+   ],
+   [
+      9563,
+      "SK Fürth",
+      "SK"
+   ],
+   [
+      9564,
+      "SK Nürnberg",
+      "SK"
+   ],
+   [
+      9565,
+      "SK Schwabach",
+      "SK"
+   ],
+   [
+      9571,
+      "LK Ansbach",
+      "LK"
+   ],
+   [
+      9572,
+      "LK Erlangen-Höchstadt",
+      "LK"
+   ],
+   [
+      9573,
+      "LK Fürth",
+      "LK"
+   ],
+   [
+      9574,
+      "LK Nürnberger Land",
+      "LK"
+   ],
+   [
+      9575,
+      "LK Neustadt a.d.Aisch-Bad Windsheim",
+      "LK"
+   ],
+   [
+      9576,
+      "LK Roth",
+      "LK"
+   ],
+   [
+      9577,
+      "LK Weißenburg-Gunzenhausen",
+      "LK"
+   ],
+   [
+      9661,
+      "SK Aschaffenburg",
+      "SK"
+   ],
+   [
+      9662,
+      "SK Schweinfurt",
+      "SK"
+   ],
+   [
+      9663,
+      "SK Würzburg",
+      "SK"
+   ],
+   [
+      9671,
+      "LK Aschaffenburg",
+      "LK"
+   ],
+   [
+      9672,
+      "LK Bad Kissingen",
+      "LK"
+   ],
+   [
+      9673,
+      "LK Rhön-Grabfeld",
+      "LK"
+   ],
+   [
+      9674,
+      "LK Haßberge",
+      "LK"
+   ],
+   [
+      9675,
+      "LK Kitzingen",
+      "LK"
+   ],
+   [
+      9676,
+      "LK Miltenberg",
+      "LK"
+   ],
+   [
+      9677,
+      "LK Main-Spessart",
+      "LK"
+   ],
+   [
+      9678,
+      "LK Schweinfurt",
+      "LK"
+   ],
+   [
+      9679,
+      "LK Würzburg",
+      "LK"
+   ],
+   [
+      9761,
+      "SK Augsburg",
+      "SK"
+   ],
+   [
+      9762,
+      "SK Kaufbeuren",
+      "SK"
+   ],
+   [
+      9763,
+      "SK Kempten",
+      "SK"
+   ],
+   [
+      9764,
+      "SK Memmingen",
+      "SK"
+   ],
+   [
+      9771,
+      "LK Aichach-Friedberg",
+      "LK"
+   ],
+   [
+      9772,
+      "LK Augsburg",
+      "LK"
+   ],
+   [
+      9773,
+      "LK Dillingen a.d.Donau",
+      "LK"
+   ],
+   [
+      9774,
+      "LK Günzburg",
+      "LK"
+   ],
+   [
+      9775,
+      "LK Neu-Ulm",
+      "LK"
+   ],
+   [
+      9776,
+      "LK Lindau",
+      "LK"
+   ],
+   [
+      9777,
+      "LK Ostallgäu",
+      "LK"
+   ],
+   [
+      9778,
+      "LK Unterallgäu",
+      "LK"
+   ],
+   [
+      9779,
+      "LK Donau-Ries",
+      "LK"
+   ],
+   [
+      9780,
+      "LK Oberallgäu",
+      "LK"
+   ]
+]
