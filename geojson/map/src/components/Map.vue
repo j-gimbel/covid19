@@ -86,6 +86,7 @@ export default {
     const geoJsonloaded = ref(false);
 
     const geojson = ref({});
+
     const getGeojson = async () => {
       var myHeaders = new Headers();
       myHeaders.append("pragma", "no-cache");
@@ -99,11 +100,12 @@ export default {
       };
 
       var myRequest = new Request("landkreise_rki.geojson");
-      await fetch(myRequest, myInit)
-        .then(function (response) {
+      fetch(myRequest, myInit)
+        /*.then(function (response) {
           console.log(response);
           return response.json();
-        })
+        })*/
+        .then((response) => response.json())
         .then(function (geojson_data) {
           console.log(geojson_data);
           geojson.value = geojson_data;
