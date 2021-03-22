@@ -2,11 +2,15 @@
   <div v-if="loaded" class="container-fluid vh-100">
     <div class="row vh-100">
       <div class="col-9">
-        <l-map zoom="7" :center="[51.4, 9.0]">
+        <l-map :zoom="7" :center="[51.4, 9.0]">
+          <l-geo-json
+            v-if="loaded"
+            :geojson="geojson"
+            :options="geojsonOptions"
+          />
           <l-tile-layer
             url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
           ></l-tile-layer>
-          <l-geo-json :geojson="geojson" :options="geojsonOptions" />
         </l-map>
       </div>
 
@@ -52,6 +56,10 @@ export default {
       console.log(o, n, this.hoveredLayer);
       this.lkName = this.hoveredLayer.feature.properties.name;
     },
+    geoJsonloaded(o, n) {
+      console.log("loaded!");
+      this.loaded = this.geoJsonloaded;
+    },
   },
 
   setup() {
@@ -75,21 +83,31 @@ export default {
     const selectedLayer = ref(null);
     const hoveredLayer = ref(null);
 
+    const geoJsonloaded = ref(false);
+
     const geojson = ref({});
     const getGeojson = async () => {
-      geojson.value = await fetch("landkreise_rki.geojson", {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      })
+      var myHeaders = new Headers();
+      myHeaders.append("pragma", "no-cache");
+      myHeaders.append("cache-control", "no-cache");
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("Accept", "application/json");
+
+      var myInit = {
+        method: "GET",
+        headers: myHeaders,
+      };
+
+      var myRequest = new Request("landkreise_rki.geojson");
+      await fetch(myRequest, myInit)
         .then(function (response) {
           console.log(response);
           return response.json();
         })
         .then(function (geojson_data) {
           console.log(geojson_data);
-
+          geojson.value = geojson_data;
+          geoJsonloaded.value = true;
           return geojson_data;
         });
     };
@@ -132,12 +150,14 @@ export default {
     };
 
     const whenMouseout = (e) => {
-      //console.log("whenMouseout", e);
+      console.log("whenMouseout", e);
       var layer = e.target;
 
       //if (selectedLayer != null) {
+
       if (selectedLayer.value != null) {
         console.log(selectedLayer);
+
         if (
           selectedLayer.value.feature.properties.id ==
           layer.feature.properties.id
@@ -173,6 +193,7 @@ export default {
       whenClicked,
       selectedLayer,
       hoveredLayer,
+      geoJsonloaded,
     };
   },
 };
