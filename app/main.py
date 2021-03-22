@@ -16,6 +16,7 @@ app = FastAPI(
 )
 
 app.mount("/charts", StaticFiles(directory="charts", html=True), name="charts")
+app.mount("/map", StaticFiles(directory="map", html=True), name="map")
 
 
 app.add_middleware(
