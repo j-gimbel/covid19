@@ -1,0 +1,21 @@
+{
+  "name": "map",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.9.1",
+    "bootstrap": "^5.0.0-beta2",
+    "leaflet": "^1.7.1",
+    "vue": "^3.0.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.1.5",
+    "@vue-leaflet/vue-leaflet": "^0.6.0",
+    "@vue/compiler-sfc": "^3.0.5",
+    "vite": "^2.1.0"
+  }
+}
