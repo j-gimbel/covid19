@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loaded" class="container-fluid vh-100">
+  <div v-if="geoJsonloaded" class="container-fluid vh-100">
     <div class="row vh-100">
       <div class="col-9">
         <l-map :zoom="7" :center="[51.4, 9.0]">
@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { LMap, LTileLayer, LGeoJson } from "@vue-leaflet/vue-leaflet";
 /*import {
   LMap,
@@ -37,35 +37,36 @@ export default {
     LTileLayer,
     LGeoJson,
   },
-
+  /*
   data() {
     return {
-      zoom: 6,
+      //zoom: 6,
       geojsonOptions: {
         onEachFeature: this.onEachFeature,
         style: this.setGeoJsonStyle,
       },
-      loaded: false,
-      lkName: "",
     };
-  },
-
+  },*/
+  /*
   mounted() {
     this.loaded = true;
-  },
-  watch: {
+  },*/
+
+  // watch: {
+  /*
     selectedLayer(o, n) {
       console.log(o, n, this.selectedLayer);
     },
     hoveredLayer(o, n) {
       console.log(o, n, this.hoveredLayer);
       this.lkName = this.hoveredLayer.feature.properties.name;
-    },
+    },*/
+  /*
     geoJsonloaded(o, n) {
       console.log("loaded!");
       this.loaded = this.geoJsonloaded;
     },
-  },
+  },*/
 
   setup() {
     const defaultStyle = {
@@ -87,6 +88,22 @@ export default {
     const hoveredLayer = ref(null);
     const geoJsonloaded = ref(false);
     const geojson = ref({});
+
+    const lkName = computed(() => {
+      //console.log("computed!", hoveredLayer.value);
+      if (hoveredLayer.value) {
+        return hoveredLayer.value.feature.properties.name;
+      }
+    });
+
+    const geoJsonloaded2 = computed(() => {
+      console.log("computed!", geojson.value);
+      if (geojson.value) {
+        return true;
+      } else {
+        return false;
+      }
+    });
 
     const getGeojson = async () => {
       var myHeaders = new Headers();
@@ -184,6 +201,12 @@ export default {
       selectedLayer,
       hoveredLayer,
       geoJsonloaded,
+      lkName,
+      geoJsonloaded2,
+      geojsonOptions: {
+        onEachFeature: onEachFeature,
+        style: setGeoJsonStyle,
+      },
     };
   },
 };
