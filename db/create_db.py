@@ -13,7 +13,7 @@ if __name__ == "__main__":
     )
     """
 
-    parser.add_argument("--agegroups", help="assume age groups in ", action="store_true")
+    parser.add_argument("--noagegroups", help="assume age groups in ", action="store_true")
 
     parser.add_argument(
         "all_series_csv_filepath",
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     if not os.path.isfile(args.all_series_csv_filepath):
         print("file " + args.all_series_csv_filepath + " not found")
         sys.exit(1)
-    db.create(args.agegroups, args.all_series_csv_filepath)
+    db.create(args.noagegroups, args.all_series_csv_filepath)
     # except Exception as e:
     #    print(e)
 
