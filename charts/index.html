@@ -209,7 +209,7 @@
 
             usp = new URLSearchParams();
             usp.append('p', JSON.stringify(params))
-            fetch(base_url + '/api/covidnumbers?' + usp.toString())
+            fetch(base_url + '/api/covidnumbers_demo?' + usp.toString())
                 .then(response => response.json())
                 .then(response => {
                     //console.log("response", response);

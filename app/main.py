@@ -1,5 +1,6 @@
 from typing import List
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.responses import ORJSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -13,6 +14,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Covid Risk API Demo ",
     description="Datenquelle: https://pavelmayer.de/covid/risks/ . This is a private site in test mode, data validitiy cannot be guaranteed. Hinweis: Dies ist eine privat betriebene Seite im Testbetrieb, für die Richtigkeit der Berechnung und der Ergebnisse gibt es keine Gewähr.",
+    default_response_class=ORJSONResponse
 )
 
 app.mount("/charts", StaticFiles(directory="charts", html=True), name="charts")
@@ -57,12 +59,24 @@ async def bundesland_daten(kuerzel: str, session: Session = Depends(get_db)):
 async def get_lankreis_daten(session: Session = Depends(get_db)):
     return crud.get_landkreise(session=session)
 
+
 @app.get(
     "/api/landkreis/{name}",
     response_model=List[schemas.Lankreis_Data_Base],
 )
 async def get_lankreis_daten(name: str, session: Session = Depends(get_db)):
     return crud.get_landkreis_daten(session=session, name=name)
+
+
+@app.get(
+    "/api/landkreis",
+    # response_model=List[schemas.Lankreis_Data_Base],
+)
+async def get_landkreis_daten_by_id_and_date(id: int, date: str, session: Session = Depends(get_db)):
+    print(date)
+    print(str(id))
+    return crud.get_landkreis_daten_by_id_and_date(session=session, id=id, date=date)
+
 
 @app.get(
     "/api/map/demo",  # ,
@@ -79,8 +93,9 @@ async def geojson_demo(date: str, session: Session = Depends(get_db)):
 async def all_regions_in_db(session: Session = Depends(get_db)):
     return crud.get_all_regions_in_db(session=session)
 
+# for chart demo
 @app.get(
-    "/api/covidnumbers",  # ,
+    "/api/covidnumbers_demo",  # ,
     # response_model=List[schemas.GeoDemo_Base],
 )
 async def covidnumbers(p: str, session: Session = Depends(get_db)):

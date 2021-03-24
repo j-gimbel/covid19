@@ -37,38 +37,9 @@ export default {
     LTileLayer,
     LGeoJson,
   },
-  /*
-  data() {
-    return {
-      //zoom: 6,
-      geojsonOptions: {
-        onEachFeature: this.onEachFeature,
-        style: this.setGeoJsonStyle,
-      },
-    };
-  },*/
-  /*
-  mounted() {
-    this.loaded = true;
-  },*/
-
-  // watch: {
-  /*
-    selectedLayer(o, n) {
-      console.log(o, n, this.selectedLayer);
-    },
-    hoveredLayer(o, n) {
-      console.log(o, n, this.hoveredLayer);
-      this.lkName = this.hoveredLayer.feature.properties.name;
-    },*/
-  /*
-    geoJsonloaded(o, n) {
-      console.log("loaded!");
-      this.loaded = this.geoJsonloaded;
-    },
-  },*/
 
   setup() {
+    let url = "http://localhost:8000";
     const defaultStyle = {
       weight: 1,
       color: "#808080",
@@ -96,14 +67,17 @@ export default {
       }
     });
 
-    const geoJsonloaded2 = computed(() => {
-      console.log("computed!", geojson.value);
-      if (geojson.value) {
-        return true;
-      } else {
-        return false;
+    /*const lkIDselected = computed(() => {
+      //console.log("computed!", hoveredLayer.value);
+      if (selectedLayer.value) {
+
+        return selectedLayer.value.feature.properties.id;
       }
-    });
+    });*/
+
+    const getLKData = async () => {
+      fetch();
+    };
 
     const getGeojson = async () => {
       var myHeaders = new Headers();
@@ -202,6 +176,7 @@ export default {
       hoveredLayer,
       geoJsonloaded,
       lkName,
+      lkIDselected,
       geoJsonloaded2,
       geojsonOptions: {
         onEachFeature: onEachFeature,

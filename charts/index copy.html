@@ -1,0 +1,378 @@
+<!doctype html>
+<html style="font-family: 'Helvetica','Arial', Sans-Serif;">
+
+<head>
+    <title>Covid 19 Numbers Germany</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!--
+    <link href="c3.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="c3.min.js"></script>
+
+    <style>
+        .c3-axis-y text {
+            font-size: 12px;
+        }
+
+        .c3-axis-y2 text {
+            font-size: 12px;
+        }
+
+        .c3-axis-x text {
+            font-size: 15px;
+        }
+
+        .c3-legend-item {
+            font-size: 15px;
+        }
+
+
+        .c3-line {
+            stroke-width: 2px;
+        }
+     </style>
+-->
+</head>
+
+<body>
+    <!-- As a heading -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Covid 19 Data</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!--
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    </li>
+                </ul>-->
+
+
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">Open Settings</button>
+
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="px-4 col-sm-3 ">
+                <h4>Chart Settings</h4>
+
+
+
+
+
+            </div>
+        </div>
+        <div class="row mt-3">
+
+
+            <div class="col-sm-9">
+
+                <div id="chart"></div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="card">
+                        <div class="card-header">Search Region</div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <input id="region_search" type="text" class="form-control"
+                                    placeholder="...enter region (e.g. Hessen / Berlin)" aria-label="region_search"
+                                    aria-describedby="region_search">
+                                <div class="px-2 pt-1" style="max-height:8em;overflow-y:scroll">
+                                    <!--
+                                    <div class="select">a</div>
+                                    <div class="select">b</div>
+                                    <div class="select">a</div>
+                                    <div class="select">b</div>
+                                    <div class="select">a</div>
+                                    <div class="select">b</div>
+                                    <div class="select">a</div>
+                                    <div class="select">b</div>
+                                    <div class="select">b</div>
+                                    <div class="select">a</div>
+                                    <div class="select">b</div>
+                                    <div class="select">a</div>
+                                    <div class="select">b</div>
+                                    <div class="select">a</div>
+                                    <div class="select">b</div>
+                                    -->
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="check_faelle"
+                                            checked>
+                                        <label class="form-check-label" for="check_faelle">
+                                            Fälle
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="check_todefaelle">
+                                        <label class="form-check-label" for="check_todefaelle">
+                                            Todesfälle
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="check_genesen">
+                                        <label class="form-check-label" for="check_genesen">
+                                            Genesen
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Default radio
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault"
+                                            id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Default checked radio
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+        crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+
+
+        //const datum = new Intl.DateTimeFormat('de').format(new Date());
+        //document.querySelector('#datum').innerText = datum
+        var chart = null
+        var zoomMode = "scroll"
+        var zoomDomain = null
+
+        document.addEventListener("DOMContentLoaded", function (event) {
+
+            var trace1 = {
+                x: [1, 2, 3],
+                y: [40, 50, 60],
+                name: 'yaxis data',
+                type: 'scatter'
+            };
+
+            var trace2 = {
+                x: [2, 3, 4],
+                y: [4, 5, 6],
+                name: 'yaxis2 data',
+                yaxis: 'y2',
+                type: 'scatter'
+            };
+
+            var data = [trace1, trace2];
+
+            var layout = {
+                title: 'Double Y Axis Example',
+                yaxis: { title: 'yaxis title' },
+                yaxis2: {
+                    title: 'yaxis2 title',
+                    titlefont: { color: 'rgb(148, 103, 189)' },
+                    tickfont: { color: 'rgb(148, 103, 189)' },
+                    overlaying: 'y',
+                    side: 'right'
+                }
+            };
+
+            Plotly.newPlot('chart', data, layout);
+
+            /*
+            fetch('http://j-gimbel.ddns.net:8000/api/covidnumbers')
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    bb = document.querySelector('#container').getBoundingClientRect();
+                    var chartSettings = {
+                        title: {
+                            text: 'Covid 19 numbers germany'
+                        },
+                        size: {
+                            height: bb.height,
+                            width: bb.width
+                        },
+                        data: {
+                            x: 'x',
+                            columns: data,
+                            axes: {
+                                'Neue Fälle': 'y',
+                                "Neue Fälle (7 Tage D.)": 'y',
+                                'Neue Todesfälle (7 Tage D.)': 'y',
+                                'Wöchentl. Tests': 'y',
+                                '7-Tage-R-Wert': 'y2'
+ 
+                            },
+                        }
+                        ,
+                        axis: {
+                            x: {
+                                type: 'timeseries',
+                                tick: {
+                                    format: '%Y-%m-%d',
+                                    
+                                    //culling: {
+                                    //    max: 15
+                                    //},
+                                    fit: false
+                                },
+                                label: "Datum"
+                            },
+                            y: {
+                                label: "Anzahl"
+                            },
+                            y2: {
+                                show: true,
+                                label: "R-Wert"
+                            }
+                        },
+ 
+                        zoom: {
+                            enabled: true,
+                            rescale: true,
+                            onzoomend: d => {
+                                zoomDomain = d
+                                console.log(d)
+                            }
+ 
+                        },
+                        point: {
+                            show: false
+                        },
+                        grid: {
+                            x: {
+                                show: true
+                            },
+                            y: {
+                                show: true
+                            }
+                        },
+                        transition: {
+                            duration: 0
+                        }
+                        ,
+                        subchart: {
+                            show: true
+                        }
+                    }
+ 
+ 
+ 
+ 
+                    document.addEventListener("keydown", (e) => {
+ 
+                        chart.destroy()
+                        console.log(zoomMode)
+                        if (zoomMode == "scroll") {
+                            zoomMode = "drag"
+                        } else {
+                            zoomMode = "scroll"
+                        }
+                        chartSettings.zoom.type = zoomMode
+                        chart = c3.generate(chartSettings);
+                        if (zoomDomain != null) {
+                            chart.zoom(zoomDomain)
+                        }
+ 
+ 
+                    })
+ 
+                    chart = c3.generate(chartSettings);
+ 
+ 
+ 
+                });
+                */
+        });
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

@@ -58,6 +58,21 @@ def get_landkreis_daten(session: Session, name: str):
     return rows
 
 
+def get_landkreis_daten_by_id_and_date(session: Session, id: int, date: str):
+    """
+    result = (
+        session.query(models.Lankreis_Daten_Taeglich)
+        .join(models.Lankreis_Daten_Taeglich.Landkreis_id)
+        .distinct()
+        .order_by(models.Landkreis_Daten_Taeglich.Aktualisierung)
+        .all()
+    )"""
+    #sa_landkreis = session.query(models.Landkreis).filter_by(id=id).one()
+    rows = session.query(models.Landkreis_Daten).filter_by(Landkreis_ID=id, Datum=date).all()
+    print(rows[0].Datum)
+    return rows
+
+
 def get_geojson_demo(session: Session, date: str):
 
     # lks = session.query(models.Landkreis).all()
