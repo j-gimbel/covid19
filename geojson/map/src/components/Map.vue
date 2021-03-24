@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-import { ref, onMounted, watch, computed } from "vue";
+import { ref, onMounted, watch, computed, toRefs } from "vue";
 import { LMap, LTileLayer, LGeoJson } from "@vue-leaflet/vue-leaflet";
 /*import {
   LMap,
@@ -38,7 +38,7 @@ export default {
     LGeoJson,
   },
 
-  setup() {
+  setup(props) {
     let url = "http://localhost:8000";
     const defaultStyle = {
       weight: 1,
@@ -55,25 +55,28 @@ export default {
       weight: 2,
     };
 
+    /*
     const selectedLayer = ref(null);
     const hoveredLayer = ref(null);
+    */
+    landkreisName = ref("");
+    var selectedLayer = null;
+    var hoveredLayer = null;
     const geoJsonloaded = ref(false);
     const geojson = ref({});
 
-    const lkName = computed(() => {
-      //console.log("computed!", hoveredLayer.value);
-      if (hoveredLayer.value) {
-        return hoveredLayer.value.feature.properties.name;
-      }
-    });
-
-    /*const lkIDselected = computed(() => {
-      //console.log("computed!", hoveredLayer.value);
-      if (selectedLayer.value) {
-
-        return selectedLayer.value.feature.properties.id;
-      }
-    });*/
+    // load new data when landkreisId changes
+    const landkreisId = ref(null);
+    const getLandKreisData = async () => {
+      console.log(landkreisId.value);
+      fetch("http://localhost:8000/api/bundeslaender")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          landkreisName = data.name;
+        });
+    };
+    watch(landkreisId, getLandKreisData);
 
     const getLKData = async () => {
       fetch();
@@ -105,29 +108,30 @@ export default {
     const whenClicked = (e) => {
       //console.log("whenClicked", e);
       var layer = e.target;
-      if (selectedLayer.value != null) {
-        selectedLayer.value.setStyle(defaultStyle);
+
+      if (selectedLayer != null) {
+        selectedLayer.setStyle(defaultStyle);
         if (
-          selectedLayer.value.feature.properties.id ==
-          layer.feature.properties.id
+          selectedLayer.feature.properties.id == layer.feature.properties.id
         ) {
-          selectedLayer.value = null;
+          selectedLayer = null;
+          landkreisId.value = null;
           return;
         }
       }
-      selectedLayer.value = layer;
-      console.log(selectedLayer.value);
+      selectedLayer = layer;
+      landkreisId.value = layer.feature.properties.id;
+      console.log(selectedLayer);
       layer.setStyle(selectedStyle);
     };
 
     const whenMouseover = (e) => {
       //console.log("whenMouseover", e);
       var layer = e.target;
-      hoveredLayer.value = layer;
-      if (selectedLayer.value != null) {
+      hoveredLayer = layer;
+      if (selectedLayer != null) {
         if (
-          selectedLayer.value.feature.properties.id ==
-          layer.feature.properties.id
+          selectedLayer.feature.properties.id == layer.feature.properties.id
         ) {
           return;
         }
@@ -138,11 +142,10 @@ export default {
     const whenMouseout = (e) => {
       console.log("whenMouseout", e);
       var layer = e.target;
-      if (selectedLayer.value != null) {
+      if (selectedLayer != null) {
         console.log(selectedLayer);
         if (
-          selectedLayer.value.feature.properties.id ==
-          layer.feature.properties.id
+          selectedLayer.feature.properties.id == layer.feature.properties.id
         ) {
           return;
         }
@@ -176,8 +179,6 @@ export default {
       hoveredLayer,
       geoJsonloaded,
       lkName,
-      lkIDselected,
-      geoJsonloaded2,
       geojsonOptions: {
         onEachFeature: onEachFeature,
         style: setGeoJsonStyle,
