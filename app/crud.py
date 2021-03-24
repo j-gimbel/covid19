@@ -5,73 +5,26 @@ from sqlalchemy.sql import func
 from datetime import date
 
 def get_bundeslaender_daten(session: Session):
-    """
-    result = (
-        session.query(models.Bundesland_Daten_Taeglich)
-        .join(models.Bundesland_Daten_Taeglich.bundesland_id)
-        .distinct()
-        .order_by(models.Bundesland_Daten_Taeglich.Aktualisierung)
-        .all()
-    )"""
-
     return session.query(models.Bundesland).all()
 
-
-def get_bundesland_daten(session: Session, kuerzel: str):
-    """
-    result = (
-        session.query(models.Bundesland_Daten_Taeglich)
-        .join(models.Bundesland_Daten_Taeglich.bundesland_id)
-        .distinct()
-        .order_by(models.Bundesland_Daten_Taeglich.Aktualisierung)
-        .all()
-    )"""
-    sa_bundesland = session.query(models.Bundesland).filter_by(Kuerzel=kuerzel.upper()).one()
-    rows = session.query(models.Bundesland_Daten).filter_by(Bundesland_ID=sa_bundesland.ID).all()
-    return rows
+def get_lankreise_daten(session: Session):
+    # return session.query(models.Landkreis).all()
+    return session.query(models.Landkreis).with_entities(
+        models.Landkreis.ID, models.Landkreis.Name, models.Landkreis.Typ
+    ).all()
 
 
-def get_landkreise(session: Session):
-    """
-    result = (
-        session.query(models.Landkreis_Daten_Taeglich)
-        .join(models.Landkreis_Daten_Taeglich.bundesland_id)
-        .distinct()
-        .order_by(models.Landkreis_Daten_Taeglich.Aktualisierung)
-        .all()
-    )"""
-
-    return session.query(models.Landkreis).all()
+def get_lankreis_info_by_id(session: Session, id: int):
+    return session.query(models.Landkreis).filter_by(ID=id).one_or_none()
 
 
-def get_landkreis_daten(session: Session, name: str):
-    """
-    result = (
-        session.query(models.Lankreis_Daten_Taeglich)
-        .join(models.Lankreis_Daten_Taeglich.Landkreis_id)
-        .distinct()
-        .order_by(models.Landkreis_Daten_Taeglich.Aktualisierung)
-        .all()
-    )"""
-    sa_landkreis = session.query(models.Landkreis).filter_by(Name=name).one()
-    rows = session.query(models.Landkreis_Daten).filter_by(Landkreis_ID=sa_landkreis.ID).all()
-    return rows
-
-
+"""
 def get_landkreis_daten_by_id_and_date(session: Session, id: int, date: str):
-    """
-    result = (
-        session.query(models.Lankreis_Daten_Taeglich)
-        .join(models.Lankreis_Daten_Taeglich.Landkreis_id)
-        .distinct()
-        .order_by(models.Landkreis_Daten_Taeglich.Aktualisierung)
-        .all()
-    )"""
     #sa_landkreis = session.query(models.Landkreis).filter_by(id=id).one()
     rows = session.query(models.Landkreis_Daten).filter_by(Landkreis_ID=id, Datum=date).all()
     print(rows[0].Datum)
     return rows
-
+"""
 
 def get_geojson_demo(session: Session, date: str):
 

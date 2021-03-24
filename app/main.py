@@ -46,28 +46,20 @@ async def bundeslaender_daten(session: Session = Depends(get_db)):
     return crud.get_bundeslaender_daten(session=session)
 
 @app.get(
-    "/api/bundesland/{kuerzel}",  # ,
-    response_model=List[schemas.Bundesland_Data_Base],
-)
-async def bundesland_daten(kuerzel: str, session: Session = Depends(get_db)):
-    return crud.get_bundesland_daten(session=session, kuerzel=kuerzel)
-
-@app.get(
-    "/api/landkreise/",
+    "/api/landkreise",
     response_model=List[schemas.Landkreise_Base],
 )
-async def get_lankreis_daten(session: Session = Depends(get_db)):
-    return crud.get_landkreise(session=session)
-
+async def get_lankreise_daten(session: Session = Depends(get_db)):
+    return crud.get_lankreise_daten(session=session)
 
 @app.get(
-    "/api/landkreis/{name}",
-    response_model=List[schemas.Lankreis_Data_Base],
+    "/api/landkreis/{id}"
+    # response_model=List[schemas.Lankreis_Data_Base],
 )
-async def get_lankreis_daten(name: str, session: Session = Depends(get_db)):
-    return crud.get_landkreis_daten(session=session, name=name)
+async def get_lankreis_info_by_id(id: int, session: Session = Depends(get_db)):
+    return crud.get_lankreis_info_by_id(session=session, id=id)
 
-
+"""
 @app.get(
     "/api/landkreis",
     # response_model=List[schemas.Lankreis_Data_Base],
@@ -76,7 +68,7 @@ async def get_landkreis_daten_by_id_and_date(id: int, date: str, session: Sessio
     print(date)
     print(str(id))
     return crud.get_landkreis_daten_by_id_and_date(session=session, id=id, date=date)
-
+"""
 
 @app.get(
     "/api/map/demo",  # ,

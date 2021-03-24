@@ -1,21 +1,29 @@
 from typing import List, Optional
-
+from datetime import date
 from pydantic import BaseModel, Field
 
 
 class Bundesland_Base(BaseModel):
+    ID: int
     Name: str
     Kuerzel: str
     Einwohner: int
     Flaeche: float
-    Dichte: float
+    Einwohner: int
+    Einwohner_AG_A00_A04: int
+    Einwohner_AG_A05_A14: int
+    Einwohner_AG_A15_A34: int
+    Einwohner_AG_A35_A59: int
+    Einwohner_AG_A60_A79: int
+    Einwohner_AG_A80Plus: int
 
     class Config:
         orm_mode = True
 
 
+"""
 class Bundesland_Data_Base(BaseModel):
-    Datum: str
+    Datum: date
     AnzahlFall: str
     AnzahlTodesfall: str
     AnzahlGenesen: str
@@ -23,14 +31,14 @@ class Bundesland_Data_Base(BaseModel):
 
     class Config:
         orm_mode = True
-
+"""
 
 class Landkreise_Base(BaseModel):
+    ID: int
     Name: str
     Typ: str
-    Einwohner: int
-    Flaeche: float
-    Dichte: float
+    # Einwohner: int
+    # Flaeche: float
 
     class Config:
         orm_mode = True
