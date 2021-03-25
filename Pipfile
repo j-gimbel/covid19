@@ -16,14 +16,16 @@ passlib = {extras = ["bcrypt"], version = "*"}
 jupyterlab = "*"
 matplotlib = "*"
 gsutil = "*"
-orjson = "*"
+aiofiles = "*"
+ujson = "*"
+pillow = "*"
 
 [dev-packages]
 autopep8 = "*"
 flake8 = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true

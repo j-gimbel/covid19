@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import Depends, FastAPI, HTTPException
-from fastapi.responses import ORJSONResponse
+#from fastapi.responses import ORJSONResponse
+from fastapi.responses import UJSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -14,7 +15,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Covid Risk API Demo ",
     description="Datenquelle: https://pavelmayer.de/covid/risks/ . This is a private site in test mode, data validitiy cannot be guaranteed. Hinweis: Dies ist eine privat betriebene Seite im Testbetrieb, für die Richtigkeit der Berechnung und der Ergebnisse gibt es keine Gewähr.",
-    default_response_class=ORJSONResponse
+    default_response_class=UJSONResponse
 )
 
 app.mount("/charts", StaticFiles(directory="charts", html=True), name="charts")

@@ -4277,3 +4277,149 @@ F1 2021-03-17 23:06:35,581 INFO Waiting for application shutdown.
 F1 2021-03-17 23:06:35,582 INFO Application shutdown complete.
 F1 2021-03-17 23:06:35,583 INFO Finished server process [2704]
 F1 2021-03-17 23:06:35,609 INFO Stopping reloader process [19192]
+F1 2021-03-24 23:30:45,201 INFO Started server process [13083]
+F1 2021-03-24 23:30:45,204 INFO Waiting for application startup.
+F1 2021-03-24 23:30:45,207 INFO Application startup complete.
+F1 2021-03-24 23:30:45,218 INFO Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+F1 2021-03-24 23:30:57,611 INFO 84.59.139.21:60906 - "GET /docs HTTP/1.1" 200
+F1 2021-03-24 23:30:57,886 INFO 84.59.139.21:60906 - "GET /openapi.json HTTP/1.1" 200
+F1 2021-03-24 23:31:03,445 INFO 84.59.139.21:60907 - "GET /api/landkreise HTTP/1.1" 500
+F1 2021-03-24 23:31:03,451 ERROR Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/protocols/http/httptools_impl.py", line 398, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/middleware/message_logger.py", line 65, in __call__
+    raise exc from None
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/middleware/message_logger.py", line 61, in __call__
+    await self.app(scope, inner_receive, inner_send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/middleware/cors.py", line 78, in __call__
+    await self.app(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/fastapi/routing.py", line 220, in app
+    response = actual_response_class(
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/responses.py", line 49, in __init__
+    self.body = self.render(content)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/fastapi/responses.py", line 22, in render
+    assert orjson is not None, "orjson must be installed to use ORJSONResponse"
+AssertionError: orjson must be installed to use ORJSONResponse
+F1 2021-03-24 23:57:33,980 INFO Shutting down
+F1 2021-03-24 23:57:34,218 INFO Finished server process [13083]
+F1 2021-03-24 23:57:45,269 INFO Started server process [17814]
+F1 2021-03-24 23:57:45,270 INFO Waiting for application startup.
+F1 2021-03-24 23:57:45,273 INFO Application startup complete.
+F1 2021-03-24 23:57:45,283 INFO Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+F1 2021-03-24 23:57:58,041 INFO 84.59.139.21:61097 - "GET /api/landkreise HTTP/1.1" 500
+F1 2021-03-24 23:57:58,046 ERROR Exception in ASGI application
+Traceback (most recent call last):
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/protocols/http/httptools_impl.py", line 398, in run_asgi
+    result = await app(self.scope, self.receive, self.send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/middleware/proxy_headers.py", line 45, in __call__
+    return await self.app(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/middleware/message_logger.py", line 65, in __call__
+    raise exc from None
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/middleware/message_logger.py", line 61, in __call__
+    await self.app(scope, inner_receive, inner_send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/fastapi/applications.py", line 199, in __call__
+    await super().__call__(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/applications.py", line 111, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/middleware/errors.py", line 181, in __call__
+    raise exc from None
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/middleware/errors.py", line 159, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/middleware/cors.py", line 78, in __call__
+    await self.app(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/exceptions.py", line 82, in __call__
+    raise exc from None
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/exceptions.py", line 71, in __call__
+    await self.app(scope, receive, sender)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/routing.py", line 566, in __call__
+    await route.handle(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/routing.py", line 227, in handle
+    await self.app(scope, receive, send)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/routing.py", line 41, in app
+    response = await func(request)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/fastapi/routing.py", line 220, in app
+    response = actual_response_class(
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/starlette/responses.py", line 49, in __init__
+    self.body = self.render(content)
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/fastapi/responses.py", line 22, in render
+    assert orjson is not None, "orjson must be installed to use ORJSONResponse"
+AssertionError: orjson must be installed to use ORJSONResponse
+F1 2021-03-25 00:42:54,016 INFO Shutting down
+F1 2021-03-25 00:42:54,224 INFO Finished server process [17814]
+F1 2021-03-25 02:22:52,040 INFO Started server process [29650]
+F1 2021-03-25 02:22:52,041 INFO Waiting for application startup.
+F1 2021-03-25 02:22:52,043 INFO Application startup complete.
+F1 2021-03-25 02:22:52,054 INFO Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+F1 2021-03-25 02:23:03,626 INFO 84.59.139.21:61983 - "GET /api/landkreise HTTP/1.1" 200
+F1 2021-03-25 05:15:21,751 INFO 152.67.0.61:43838 - "POST /_ignition/execute-solution HTTP/1.1" 404
+F1 2021-03-25 05:34:45,364 INFO 134.209.77.191:42998 - "POST /_ignition/execute-solution HTTP/1.1" 404
+F1 2021-03-25 07:22:47,762 INFO 172.104.92.166:60172 - "GET / HTTP/1.1" 404
+F1 2021-03-25 08:45:53,198 INFO 93.72.114.171:51548 - "GET /status HTTP/1.1" 404
+F1 2021-03-25 08:45:53,261 INFO 93.72.114.171:51548 - "GET /stat HTTP/1.1" 404
+F1 2021-03-25 08:45:53,329 INFO 93.72.114.171:51548 - "GET /ace/getstream?id=031ef952db1903fee04541ac5090de308a8ba566&.m3u8 HTTP/1.1" 404
+F1 2021-03-25 09:57:51,128 INFO 84.59.139.21:62505 - "GET /maps/ HTTP/1.1" 404
+F1 2021-03-25 11:11:30,647 INFO 121.196.20.12:51554 - "POST /_ignition/execute-solution HTTP/1.1" 404
+F1 2021-03-25 11:28:23,109 WARNING Invalid HTTP request received.
+Traceback (most recent call last):
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/protocols/http/httptools_impl.py", line 167, in data_received
+    self.parser.feed_data(data)
+  File "httptools/parser/parser.pyx", line 193, in httptools.parser.parser.HttpParser.feed_data
+httptools.parser.errors.HttpParserInvalidMethodError: invalid HTTP method
+F1 2021-03-25 11:58:24,058 INFO 193.46.255.64:61183 - "GET / HTTP/1.1" 404
+F1 2021-03-25 12:20:45,608 INFO 88.102.9.248:51215 - "GET / HTTP/1.0" 404
+F1 2021-03-25 13:51:00,051 INFO 47.99.33.226:54334 - "POST /_ignition/execute-solution HTTP/1.1" 404
+F1 2021-03-25 15:08:22,330 INFO 91.132.58.11:59649 - "HEAD /robots.txt HTTP/1.0" 404
+F1 2021-03-25 16:45:37,244 INFO 185.220.101.205:29738 - "GET / HTTP/1.1" 404
+F1 2021-03-25 18:50:40,340 WARNING Invalid HTTP request received.
+Traceback (most recent call last):
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/protocols/http/httptools_impl.py", line 167, in data_received
+    self.parser.feed_data(data)
+  File "httptools/parser/parser.pyx", line 193, in httptools.parser.parser.HttpParser.feed_data
+httptools.parser.errors.HttpParserInvalidMethodError: invalid HTTP method
+F1 2021-03-25 19:49:04,525 INFO 84.128.210.78:49491 - "GET / HTTP/1.1" 404
+F1 2021-03-25 21:13:20,827 INFO 88.5.238.31:57378 - "GET / HTTP/1.1" 404
+F1 2021-03-25 21:28:42,337 WARNING Invalid HTTP request received.
+Traceback (most recent call last):
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/protocols/http/httptools_impl.py", line 167, in data_received
+    self.parser.feed_data(data)
+  File "httptools/parser/parser.pyx", line 193, in httptools.parser.parser.HttpParser.feed_data
+httptools.parser.errors.HttpParserInvalidMethodError: invalid HTTP method
+F1 2021-03-25 21:35:24,306 WARNING Invalid HTTP request received.
+Traceback (most recent call last):
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/protocols/http/httptools_impl.py", line 167, in data_received
+    self.parser.feed_data(data)
+  File "httptools/parser/parser.pyx", line 193, in httptools.parser.parser.HttpParser.feed_data
+httptools.parser.errors.HttpParserInvalidMethodError: invalid HTTP method
+F1 2021-03-25 21:44:17,291 WARNING Invalid HTTP request received.
+Traceback (most recent call last):
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/protocols/http/httptools_impl.py", line 167, in data_received
+    self.parser.feed_data(data)
+  File "httptools/parser/parser.pyx", line 193, in httptools.parser.parser.HttpParser.feed_data
+httptools.parser.errors.HttpParserInvalidMethodError: invalid HTTP method
+F1 2021-03-25 21:54:36,212 WARNING Invalid HTTP request received.
+Traceback (most recent call last):
+  File "/home/dietpi/.local/share/virtualenvs/covid19-ZcsvZhjz/lib/python3.8/site-packages/uvicorn/protocols/http/httptools_impl.py", line 167, in data_received
+    self.parser.feed_data(data)
+  File "httptools/parser/parser.pyx", line 193, in httptools.parser.parser.HttpParser.feed_data
+httptools.parser.errors.HttpParserInvalidMethodError: invalid HTTP method
