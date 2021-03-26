@@ -12,7 +12,8 @@
     "leaflet": "^1.7.1",
     "plotly.js-dist": "^1.58.4",
     "vue": "^3.0.5",
-    "vue-plotly": "^1.1.0"
+    "vue-plotly": "^1.1.0",
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.1.5",

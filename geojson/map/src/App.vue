@@ -11,6 +11,17 @@
       </div>
       -->
       <Map />
+
+      <div class="col-5">
+        <h3>Info</h3>
+        <div>
+          Landkreis:
+          <!--
+          <span> {{ landkreisName }}</span>
+          <div v-show="landkreisId" id="chart1"></div>
+          -->
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -22,7 +33,17 @@ import Map from "./components/Map.vue";
 // This starter template is using Vue 3 experimental <script setup> SFCs
 // Check out https://github.com/vuejs/rfcs/blob/script-setup-2/active-rfcs/0000-script-setup.md
 </script>
+<script>
+import { useStore } from "vuex";
 
+export default {
+  components: {},
+
+  setup(props) {
+    const store = useStore();
+  },
+};
+</script>
 <style>
 #app {
 }
