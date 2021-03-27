@@ -1,16 +1,14 @@
 <template>
-  <div class="col-7">
-    <l-map :zoom="7" :center="[51.4, 10.4]">
-      <l-geo-json
-        v-if="geoJsonloaded"
-        :geojson="geojson"
-        :options="geojsonOptions"
-      />
-      <l-tile-layer
-        url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
-      ></l-tile-layer>
-    </l-map>
-  </div>
+  <l-map :zoom="7" :center="[51.4, 10.4]">
+    <l-geo-json
+      v-if="geoJsonloaded"
+      :geojson="geojson"
+      :options="geojsonOptions"
+    />
+    <l-tile-layer
+      url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+    ></l-tile-layer>
+  </l-map>
 </template>
 <script>
 import { useStore } from "vuex";
@@ -164,7 +162,7 @@ export default {
       fetch(myRequest, myInit)
         .then((response) => response.json())
         .then(function (geojson_data) {
-          console.log(geojson_data);
+          //console.log(geojson_data);
           geojson.value = geojson_data;
           geoJsonloaded.value = true;
         });
@@ -188,15 +186,44 @@ export default {
       }
       selectedLayer = layer;
       //landkreisId.value = layer.feature.properties.id;
-      store.commit("map/setLKID", layer.feature.properties.id);
+      //store.commit("map/setLKID", layer.feature.properties.id);
       store.dispatch("map/loadLKData", layer.feature.properties.id);
+      /*
+        .then((data) => {
+          window.Plotly.newPlot(
+            document.getElementById("chart1"),
+            [
+              {
+                x: [
+                  "AG 0-4",
+                  "AG 5-14",
+                  "AG 15-34",
+                  "AG 35-59",
+                  "AG 60-79",
+                  "AG 80+",
+                ],
+                y: [
+                  data.Einwohner_AG_A00_A04,
+                  data.Einwohner_AG_A05_A14,
+                  data.Einwohner_AG_A15_A34,
+                  data.Einwohner_AG_A35_A59,
+                  data.Einwohner_AG_A60_A79,
+                  data.Einwohner_AG_A80Plus,
+                ],
+                type: "bar",
+              },
+            ],
+            { title: "Age groups distribution" },
+            { responsive: true }
+          );
+        });*/
 
       console.log(selectedLayer);
       layer.setStyle(selectedStyle);
     };
 
     const whenMouseover = (e) => {
-      console.log("whenMouseover", e);
+      //console.log("whenMouseover", e);
       var layer = e.target;
       hoveredLayer = layer;
 
@@ -209,6 +236,11 @@ export default {
         }
       }
       //landkreisName.value = hoveredLayer.feature.properties.name;
+      store.commit(
+        "map/setHoveredLKName",
+        hoveredLayer.feature.properties.name
+      );
+
       layer.setStyle(hoverStyle);
     };
 
@@ -245,6 +277,7 @@ export default {
     return {
       geojson,
       geoJsonloaded,
+
       geojsonOptions: {
         onEachFeature: onEachFeature,
         style: setGeoJsonStyle,

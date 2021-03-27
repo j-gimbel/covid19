@@ -5,29 +5,15 @@ import { resolveComponent } from "vue";
 // initial state
 const state = {
     url: "http://j-gimbel.ddns.net:8000", // "http://localhost:8000",
+    //geojson: "?",
     LKID: null,
-    geojson: "?"
+    LKName: "Moop",
+    LKData: "aaaaa"
 }
 
 // getters
 const getters = {
-    /*
-    cartProducts: (state, getters, rootState) => {
-      return state.items.map(({ id, quantity }) => {
-        const product = rootState.products.all.find(product => product.id === id)
-        return {
-          title: product.title,
-          price: product.price,
-          quantity
-        }
-      })
-    },
-  
-    cartTotalPrice: (state, getters) => {
-      return getters.cartProducts.reduce((total, product) => {
-        return total + product.price * product.quantity
-      }, 0)
-    }*/
+
 }
 
 // actions
@@ -62,115 +48,41 @@ const actions = {
 
     async loadLKData({ commit, state }, LKID) {
 
-        return fetch(state.url + "/api/landkreis/" + LKID, {
-            mode: "cors",
+        return new Promise((resolve, reject) => {
+            fetch(state.url + "/api/landkreis/" + LKID, {
+                mode: "cors",
+            })
+                .then((response) => response.json())
+                .then(function (LKData) {
+                    console.log(LKData);
+
+                    commit('setLKID', LKID)
+                    commit('setLKData', LKData)
+                    resolve(LKData)
+                });
         })
-            .then((response) => response.json())
-            .then(function (data) {
-                console.log(data);
-
-                commit('setLKID', LKID)
-                commit('setLKData', data)
-
-                //geojson.value = geojson_data;
-                //geoJsonloaded.value = true;
-
-                /*
-                window.Plotly.newPlot(
-                  document.getElementById("chart1"),
-                  //date
-                  [
-                    {
-                      x: [
-                        "AG 0-4",
-                        "AG 5-14",
-                        "AG 15-34",
-                        "AG 35-59",
-                        "AG 60-79",
-                        "AG 80+",
-                      ],
-                      y: [0, 1000, 0, 0, 0, 0],
-                      type: "bar",
-                    },
-                  ],
-                  //layout
-                  { title: "Age groups distribution" },
-                  //config
-                  { responsive: true }
-                );*/
-            });
     }
-    /*
-    checkout({ commit, state }, products) {
-        const savedCartItems = [...state.items]
-        commit('setCheckoutStatus', null)
-        // empty cart
-        commit('setCartItems', { items: [] })
-        shop.buyProducts(
-            products,
-            () => commit('setCheckoutStatus', 'successful'),
-            () => {
-                commit('setCheckoutStatus', 'failed')
-                // rollback to the cart saved before sending the request
-                commit('setCartItems', { items: savedCartItems })
-            }
-        )
-    },
- 
-    addProductToCart({ state, commit }, product) {
-        commit('setCheckoutStatus', null)
-        if (product.inventory > 0) {
-            const cartItem = state.items.find(item => item.id === product.id)
-            if (!cartItem) {
-                commit('pushProductToCart', { id: product.id })
-            } else {
-                commit('incrementItemQuantity', cartItem)
-            }
-            // remove 1 item from stock
-            commit('products/decrementProductInventory', { id: product.id }, { root: true })
-        }
-    }*/
+
 }
 
 // mutations
 const mutations = {
 
-    setLKID(state, { id }) {
+    setLKID(state, id) {
         state.LKID = id
     },
-    setLKData(state, { data }) {
+    setLKData(state, data) {
+        console.log("setLKData", data)
         state.LKData = data
     },
 
+    setHoveredLKName(state, LKName) {
+        console.log("setHoveredLKName", LKName)
+        state.LKName = LKName
 
-    setGeojson(state, geojson_data) {
-
-        state.geojson = geojson_data
-
-    },
-
+    }
 
 
-    /*
-    pushProductToCart(state, { id }) {
-        state.items.push({
-            id,
-            quantity: 1
-        })
-    },
- 
-    incrementItemQuantity(state, { id }) {
-        const cartItem = state.items.find(item => item.id === id)
-        cartItem.quantity++
-    },
- 
-    setCartItems(state, { items }) {
-        state.items = items
-    },
- 
-    setCheckoutStatus(state, status) {
-        state.checkoutStatus = status
-    }*/
 }
 
 export default {
