@@ -52,100 +52,6 @@ export default {
     var hoveredLayer = null;
     const geoJsonloaded = ref(false);
     const geojson = ref({});
-    /*
-    const landkreisId = ref(null);
-    const landkreisName = ref(null);
-    const chart1Data = ref({});
-    
-
-    const firstchartPlot = ref(true);
-
-    // load new data when landkreisId changes
-
-    const getLandKreisData = async () => {
-      console.log("getLandKreisData", landkreisId.value);
-      fetch(url + "/api/landkreis/" + landkreisId.value, {
-        mode: "cors",
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          //landkreisName.value = data.name;
-          chart1Data.value = data;
-        });
-    };
-    watch(landkreisId, getLandKreisData);
-
-    const updateChart1 = () => {
-      var data = chart1Data.value;
-      console.log(
-        "updateChart1",
-        chart1Data.value.Einwohner_AG_A00_A04,
-        data.Einwohner_AG_A00_A04
-      );
-
-      if (firstchartPlot.value == true) {
-        console.log("newPlot");
-        window.Plotly.newPlot(
-          document.getElementById("chart1"),
-          [
-            {
-              x: [
-                "AG 0-4",
-                "AG 5-14",
-                "AG 15-34",
-                "AG 35-59",
-                "AG 60-79",
-                "AG 80+",
-              ],
-              y: [
-                data.Einwohner_AG_A00_A04,
-                data.Einwohner_AG_A05_A14,
-                data.Einwohner_AG_A15_A34,
-                data.Einwohner_AG_A35_A59,
-                data.Einwohner_AG_A60_A79,
-                data.Einwohner_AG_A80Plus,
-              ],
-              type: "bar",
-            },
-          ],
-          { title: "Age groups distribution" },
-          { responsive: true }
-        );
-        firstchartPlot.value = false;
-      } else {
-        console.log("react");
-        window.Plotly.react(
-          document.getElementById("chart1"),
-          [
-            {
-              x: [
-                "AG 0-4",
-                "AG 5-14",
-                "AG 15-34",
-                "AG 35-59",
-                "AG 60-79",
-                "AG 80+",
-              ],
-              y: [
-                data.Einwohner_AG_A00_A04,
-                data.Einwohner_AG_A05_A14,
-                data.Einwohner_AG_A15_A34,
-                data.Einwohner_AG_A35_A59,
-                data.Einwohner_AG_A60_A79,
-                data.Einwohner_AG_A80Plus,
-              ],
-              type: "bar",
-            },
-          ],
-          { title: "Age groups distribution" },
-          { responsive: true }
-        );
-      }
-    };
-
-    watch(chart1Data, updateChart1);
-    */
 
     const getGeojson = async () => {
       var myHeaders = new Headers();
@@ -185,48 +91,14 @@ export default {
         }
       }
       selectedLayer = layer;
-      //landkreisId.value = layer.feature.properties.id;
-      //store.commit("map/setLKID", layer.feature.properties.id);
       store.dispatch("map/loadLKData", layer.feature.properties.id);
-      /*
-        .then((data) => {
-          window.Plotly.newPlot(
-            document.getElementById("chart1"),
-            [
-              {
-                x: [
-                  "AG 0-4",
-                  "AG 5-14",
-                  "AG 15-34",
-                  "AG 35-59",
-                  "AG 60-79",
-                  "AG 80+",
-                ],
-                y: [
-                  data.Einwohner_AG_A00_A04,
-                  data.Einwohner_AG_A05_A14,
-                  data.Einwohner_AG_A15_A34,
-                  data.Einwohner_AG_A35_A59,
-                  data.Einwohner_AG_A60_A79,
-                  data.Einwohner_AG_A80Plus,
-                ],
-                type: "bar",
-              },
-            ],
-            { title: "Age groups distribution" },
-            { responsive: true }
-          );
-        });*/
-
-      console.log(selectedLayer);
+      store.dispatch("map/loadLKDataDetails", layer.feature.properties.id);
       layer.setStyle(selectedStyle);
     };
 
     const whenMouseover = (e) => {
-      //console.log("whenMouseover", e);
       var layer = e.target;
       hoveredLayer = layer;
-
       // this is just to not change the style if the user hover the selected layer
       if (selectedLayer != null) {
         if (
@@ -235,7 +107,6 @@ export default {
           return;
         }
       }
-      //landkreisName.value = hoveredLayer.feature.properties.name;
       store.commit(
         "map/setHoveredLKName",
         hoveredLayer.feature.properties.name
@@ -245,7 +116,6 @@ export default {
     };
 
     const whenMouseout = (e) => {
-      //console.log("whenMouseout", e);
       var layer = e.target;
       // this is just to not change the style if the user hover the selected layer
       if (selectedLayer != null) {
@@ -259,8 +129,6 @@ export default {
     };
 
     const onEachFeature = (feature, layer) => {
-      //console.log(feature, layer);
-      //bind click
       layer.on({
         click: whenClicked,
         mouseover: whenMouseover,

@@ -40,6 +40,14 @@ def get_db():
 
 
 @app.get(
+    "/api/bundesrepublik"
+    # response_model=List[schemas.Lankreis_Data_Base],
+)
+async def get_bundesrepublik_info(session: Session = Depends(get_db)):
+    return crud.get_bundesrepublik_info(session=session)
+
+
+@app.get(
     "/api/bundeslaender",  # ,
     response_model=List[schemas.Bundesland_Base],
 )
@@ -53,12 +61,21 @@ async def bundeslaender_daten(session: Session = Depends(get_db)):
 async def get_lankreise_daten(session: Session = Depends(get_db)):
     return crud.get_lankreise_daten(session=session)
 
+
 @app.get(
     "/api/landkreis/{id}"
     # response_model=List[schemas.Lankreis_Data_Base],
 )
 async def get_lankreis_info_by_id(id: int, session: Session = Depends(get_db)):
     return crud.get_lankreis_info_by_id(session=session, id=id)
+
+
+@app.get(
+    "/api/landkreis/{id}/timeline"
+    # response_model=List[schemas.Lankreis_Data_Base],
+)
+async def get_lankreis_timeline_data(id: int, params: str, session: Session = Depends(get_db)):
+    return crud.get_lankreis_timeline_data(session=session, id=id, params=params)
 
 """
 @app.get(

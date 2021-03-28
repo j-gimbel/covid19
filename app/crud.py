@@ -4,6 +4,11 @@ from sqlalchemy import distinct
 from sqlalchemy.sql import func
 from datetime import date
 
+
+def get_bundesrepublik_info(session: Session):
+    return session.query(models.Bundesrepublik).one()
+
+
 def get_bundeslaender_daten(session: Session):
     return session.query(models.Bundesland).all()
 
@@ -17,6 +22,29 @@ def get_lankreise_daten(session: Session):
 def get_lankreis_info_by_id(session: Session, id: int):
     return session.query(models.Landkreis).filter_by(ID=id).one_or_none()
 
+def get_lankreis_timeline_data(session: Session, id: int, params: str):
+
+    entities = [models.Landkreis_Daten.Datum]
+    if "incidence" in params:
+        entities.append(models.Landkreis_Daten.InzidenzFallNeu_7TageSumme)
+
+    # return session.query(models.Landkreis_Daten).filter_by(Landkreis_ID=id).join(models.Landkreis_Daten.Landkreis).with_entities(entities).all()
+    data = session.query(models.Landkreis_Daten).filter_by(Landkreis_ID=id).join(models.Landkreis_Daten.Landkreis).with_entities(*entities).all()
+
+    dates = []
+    incidences = []
+    for row in data:
+        dates.append(row.Datum)
+
+        if "incidence" in params:
+            incidences.append(row.InzidenzFallNeu_7TageSumme)
+
+    results = {"dates": dates}
+    if "incidence" in params:
+        results["incidences"] = incidences
+
+    return results
+
 
 """
 def get_landkreis_daten_by_id_and_date(session: Session, id: int, date: str):
@@ -25,6 +53,7 @@ def get_landkreis_daten_by_id_and_date(session: Session, id: int, date: str):
     print(rows[0].Datum)
     return rows
 """
+
 
 def get_geojson_demo(session: Session, date: str):
 

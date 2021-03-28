@@ -1,11 +1,12 @@
 <template>
   <div class="container-fluid vh-100 p-0">
-    <div class="row vh-100 g-0">
+    <div class="row vh-100">
       <div class="col-7">
         <Map />
       </div>
       <div class="col-5">
         <Info />
+        <ChartIncidence />
         <ChartPopulation />
       </div>
     </div>
@@ -16,6 +17,7 @@
 //import HelloWorld from "./components/HelloWorld.vue";
 import Map from "./components/Map.vue";
 import Info from "./components/Info.vue";
+import ChartIncidence from "./components/ChartIncidence.vue";
 import ChartPopulation from "./components/ChartPopulation.vue";
 import { computed } from "vue";
 import { ref } from "vue";
